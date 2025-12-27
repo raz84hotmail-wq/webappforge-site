@@ -1,150 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
   <title>WebAppForge</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    /* ===== BASE ===== */
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: #0B1220;
-      color: #ffffff;
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;
+      background:#0B1220;
+      color:#fff;
     }
 
-    /* ===== HEADER ===== */
-    header {
-      height: 72px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 0 32px;
-      background: #0B1220;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+    /* HEADER */
+    header{
+      height:72px;
+      display:flex;
+      align-items:center;
+      padding:0 32px;
+      background:#0B1220;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      gap:14px;
     }
 
-    /* Logo */
-    header img {
-      height: 40px;
-      width: auto;
-      display: block;
+    header img{
+      height:40px;
+      width:auto;
+      display:block;
     }
 
-    /* Brand text WebApp (white) + Forge (blue) */
-    .brand {
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-      line-height: 1;
-      display: flex;
-      align-items: baseline;
-      gap: 0;
+    .brand{
+      font-size:26px;
+      font-weight:700;
+      line-height:1;
+      display:flex;
+      gap:0;
     }
-    .brand-white { color: #ffffff; }
-    .brand-blue  { color: #1F7CFF; }
+    .brand .w{ color:#FFFFFF; }
+    .brand .f{ color:#1F7CFF; }
 
-    /* ===== HERO SECTION ===== */
-    .hero {
-      min-height: calc(100vh - 72px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 80px 20px;
+    /* HERO */
+    .hero{
+      min-height:calc(100vh - 72px);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:80px 20px;
       background:
-        radial-gradient(circle at top, rgba(224, 86, 253, 0.15), transparent 60%),
-        linear-gradient(180deg, #0b1220 0%, #05080f 100%);
+        radial-gradient(circle at top, rgba(224,86,253,0.15), transparent 60%),
+        linear-gradient(180deg, #0B1220 0%, #05080F 100%);
     }
 
-    /* HERO title WebApp (white) + Forge (blue) */
-    .hero-title {
-      font-size: 64px;
-      font-weight: 900;
-      margin: 0 0 20px 0;
-      letter-spacing: -0.8px;
-      line-height: 1.05;
+    /* TITOLO HERO: WebApp bianco + Forge blu */
+    .hero-title{
+      font-size:64px;
+      font-weight:800;
+      margin:0 0 18px;
+      line-height:1.05;
+      letter-spacing:-0.5px;
     }
-    .hero-title .white { color: #ffffff; }
-    .hero-title .blue  { color: #1F7CFF; }
+    .hero-title .w{ color:#FFFFFF; }
+    .hero-title .f{ color:#1F7CFF; }
 
-    /* Subtitle */
-    .subtitle {
-      max-width: 760px;
-      font-size: 22px;
-      line-height: 1.6;
-      opacity: 0.9;
-      margin: 0 0 48px 0;
-    }
-
-    /* CTA buttons */
-    .cta {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
+    .subtitle{
+      max-width:760px;
+      font-size:22px;
+      line-height:1.6;
+      opacity:0.9;
+      margin:0 0 44px;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #1f7cff, #e056fd);
-      color: #ffffff;
-      padding: 16px 34px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      box-shadow: 0 12px 40px rgba(31, 124, 255, 0.35);
-      transition: all 0.3s ease;
-      display: inline-block;
+    .cta{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      justify-content:center;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 50px rgba(224, 86, 253, 0.45);
+    .btn-primary{
+      background:linear-gradient(135deg,#1F7CFF,#E056FD);
+      color:#fff;
+      padding:16px 34px;
+      border-radius:12px;
+      font-weight:600;
+      font-size:16px;
+      text-decoration:none;
+      box-shadow:0 12px 40px rgba(31,124,255,0.35);
+      transition:all .3s ease;
+    }
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 18px 50px rgba(224,86,253,0.45);
     }
 
-    .btn-secondary {
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      padding: 16px 34px;
-      border-radius: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      backdrop-filter: blur(6px);
-      transition: all 0.3s ease;
-      display: inline-block;
+    .btn-secondary{
+      border:1px solid rgba(255,255,255,0.2);
+      color:#fff;
+      padding:16px 34px;
+      border-radius:12px;
+      font-weight:500;
+      text-decoration:none;
+      backdrop-filter:blur(6px);
+      transition:all .3s ease;
     }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /* Mobile */
-    @media (max-width: 640px) {
-      header { padding: 0 18px; }
-      .brand { font-size: 22px; }
-      .hero-title { font-size: 44px; }
-      .subtitle { font-size: 18px; }
+    .btn-secondary:hover{
+      background:rgba(255,255,255,0.08);
     }
   </style>
 </head>
 
 <body>
 
-  <!-- ===== HEADER ===== -->
   <header>
-  <img src="582CA5D7-D922-43DA-A41B-BDEB413204D8.PNG" alt="WebAppForge Logo" />
+    <!-- ✅ Logo vero dal repo -->
+    <img src="./logo.png" alt="WebAppForge Logo" />
+
+    <!-- ✅ Testo: WebApp bianco + Forge blu -->
     <div class="brand">
-      <span class="brand-white">WebApp</span><span class="brand-blue">Forge</span>
+      <span class="w">WebApp</span><span class="f">Forge</span>
     </div>
   </header>
 
-  <!-- ===== HERO ===== -->
   <main class="hero">
+    <!-- ✅ Titolo centrale: WebApp bianco + Forge blu -->
     <h1 class="hero-title">
-      <span class="white">WebApp</span><span class="blue">Forge</span>
+      <span class="w">WebApp</span><span class="f">Forge</span>
     </h1>
 
     <p class="subtitle">
