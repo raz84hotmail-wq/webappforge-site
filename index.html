@@ -21,7 +21,7 @@
 
     /* HEADER */
     .site-header {
-      position: absolute;
+      position: fixed;
       top: 20px;
       left: 24px;
       z-index: 10;
@@ -30,7 +30,6 @@
     .logo-header {
       height: 40px;
       width: auto;
-      display: block;
     }
 
     /* HERO */
@@ -45,10 +44,9 @@
     }
 
     .logo-center {
-      width: 380px;
+      width: 420px;
       max-width: 90%;
       margin-bottom: 28px;
-      display: block;
     }
 
     .subtitle {
@@ -63,8 +61,8 @@
     .buttons {
       display: flex;
       gap: 16px;
-      flex-wrap: wrap;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .btn-primary {
@@ -102,16 +100,24 @@
 
 <body>
 
-  <!-- HEADER -->
+  <!-- HEADER LOGO -->
   <header class="site-header">
-    <img src="./logo-header.png" alt="WebAppForge" class="logo-header" />
+    <img
+      src="/webappforge-site/logo-header.png"
+      alt="WebAppForge"
+      class="logo-header"
+    />
   </header>
 
   <!-- HERO -->
   <main class="hero">
 
-    <!-- LOGO + SCRITTA CENTRALE -->
-    <img src="./logo-center.png" alt="WebAppForge" class="logo-center" />
+    <!-- LOGO CENTRALE -->
+    <img
+      src="/webappforge-site/logo-center.png"
+      alt="WebAppForge"
+      class="logo-center"
+    />
 
     <p class="subtitle">
       The most powerful App & Website Builder ever created.<br />
