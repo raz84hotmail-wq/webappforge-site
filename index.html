@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Inter, sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
@@ -21,15 +21,16 @@
 
     /* HEADER */
     .site-header {
-      position: fixed;
+      position: absolute;
       top: 20px;
       left: 24px;
       z-index: 10;
     }
 
     .logo-header {
-      height: 40px;
+      height: 42px;
       width: auto;
+      display: block;
     }
 
     /* HERO */
@@ -40,13 +41,14 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 20px;
+      padding: 24px;
     }
 
     .logo-center {
       width: 420px;
       max-width: 90%;
       margin-bottom: 28px;
+      display: block;
     }
 
     .subtitle {
@@ -54,15 +56,15 @@
       font-size: 18px;
       line-height: 1.6;
       opacity: 0.9;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
     /* BUTTONS */
     .buttons {
       display: flex;
       gap: 16px;
-      justify-content: center;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .btn-primary {
@@ -72,18 +74,18 @@
       border-radius: 12px;
       color: white;
       font-size: 16px;
-      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-primary:hover {
       transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(224, 86, 253, 0.35);
     }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       padding: 14px 30px;
       border-radius: 12px;
       color: white;
@@ -93,31 +95,33 @@
     }
 
     .btn-secondary:hover {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* MOBILE */
+    @media (max-width: 480px) {
+      .logo-center {
+        width: 300px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- HEADER LOGO -->
+  <!-- HEADER -->
   <header class="site-header">
-    <img
-      src="/webappforge-site/logo-header.png"
-      alt="WebAppForge"
-      class="logo-header"
-    />
+    <img src="logo-header.png" alt="WebAppForge" class="logo-header" />
   </header>
 
   <!-- HERO -->
   <main class="hero">
 
-    <!-- LOGO CENTRALE -->
-    <img
-      src="/webappforge-site/logo-center.png"
-      alt="WebAppForge"
-      class="logo-center"
-    />
+    <img src="logo-center.png" alt="WebAppForge" class="logo-center" />
 
     <p class="subtitle">
       The most powerful App & Website Builder ever created.<br />
