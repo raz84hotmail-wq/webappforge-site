@@ -28,8 +28,9 @@
     }
 
     .logo-header {
-      height: 42px;
+      height: 40px;
       width: auto;
+      display: block;
     }
 
     /* HERO */
@@ -44,13 +45,14 @@
     }
 
     .logo-center {
-      width: 360px;
+      width: 380px;
       max-width: 90%;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
+      display: block;
     }
 
     .subtitle {
-      max-width: 700px;
+      max-width: 720px;
       font-size: 18px;
       line-height: 1.6;
       opacity: 0.9;
@@ -68,10 +70,11 @@
     .btn-primary {
       background: linear-gradient(90deg, #1f7cff, #e056fd);
       border: none;
-      padding: 14px 28px;
+      padding: 14px 30px;
       border-radius: 12px;
       color: white;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       transition: transform 0.2s ease;
     }
@@ -82,8 +85,8 @@
 
     .btn-secondary {
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 14px 28px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 14px 30px;
       border-radius: 12px;
       color: white;
       font-size: 16px;
@@ -101,13 +104,14 @@
 
   <!-- HEADER -->
   <header class="site-header">
-    <img src="logo-header.png" alt="WebAppForge" class="logo-header" />
+    <img src="./logo-header.png" alt="WebAppForge" class="logo-header" />
   </header>
 
   <!-- HERO -->
   <main class="hero">
 
-    <img src="logo-center.png" alt="WebAppForge" class="logo-center" />
+    <!-- LOGO + SCRITTA CENTRALE -->
+    <img src="./logo-center.png" alt="WebAppForge" class="logo-center" />
 
     <p class="subtitle">
       The most powerful App & Website Builder ever created.<br />
