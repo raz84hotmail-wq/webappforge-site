@@ -1,155 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WebAppForge</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WebAppForge</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Inter, system-ui, sans-serif;
-    }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
 
-    body {
-      min-height: 100vh;
-      background: radial-gradient(circle at top right, #1f3b8b, #0b1220 70%);
-      color: white;
-      overflow-x: hidden;
-    }
+body {
+  background: radial-gradient(circle at top, #0f1c3f 0%, #070b18 70%);
+  color: white;
+  min-height: 100vh;
+}
 
-    /* ================= HEADER ================= */
-    .site-header {
-      position: fixed;
-      top: 24px;
-      left: 28px;
-      z-index: 100;
-    }
+/* ===== HEADER ===== */
+.site-header {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;   /* 🔥 TESTO SOTTO LA F */
+  align-items: flex-start;
+  gap: 6px;                 /* 🔥 DISTANZA MINIMA */
+  z-index: 10;
+}
 
-    .header-brand {
-      position: relative;
-      display: inline-block;
-    }
+.site-header img {
+  width: 160px;             /* 🔥 F GRANDE */
+  height: auto;
+}
 
-    /* F HEADER (GRANDE) */
-    .logo-f {
-      width: 96px;
-      height: auto;
-      display: block;
-    }
+.site-header span {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
 
-    /* TESTO SOTTO L’OMBRA DELLA F */
-    .logo-text {
-      position: absolute;
-      top: 70px;   /* distanza corretta */
-      left: 34px;
-      font-size: 20px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
+.site-header .forge {
+  color: #1f7cff;
+}
 
-    .logo-text span {
-      background: linear-gradient(90deg, #1F7CFF, #E056FD);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
 
-    /* ================= HERO (NON TOCCATO) ================= */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px;
-    }
+.hero-logo {
+  width: 140px;
+  margin-bottom: 16px;
+}
 
-    .hero-content {
-      max-width: 720px;
-    }
+.hero h1 {
+  font-size: 52px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
 
-    /* F CENTRALE – RIPRISTINATA */
-    .hero-logo {
-      width: 120px;      /* ← dimensione originale */
-      margin-bottom: 24px;
-    }
+.hero .forge {
+  color: #1f7cff;
+}
 
-    .hero h1 {
-      font-size: 48px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
+.subtitle {
+  max-width: 700px;
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin-bottom: 36px;
+}
 
-    .hero h1 span {
-      background: linear-gradient(90deg, #1F7CFF, #E056FD);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/* ===== BUTTONS ===== */
+.buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-    .hero p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #d0d6ff;
-      margin-bottom: 32px;
-    }
+.btn-primary {
+  background: linear-gradient(90deg, #1f7cff, #e056fd);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    .buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-    }
-
-    .btn-primary {
-      padding: 12px 28px;
-      border-radius: 12px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(90deg, #1F7CFF, #E056FD);
-      color: white;
-    }
-
-    .btn-secondary {
-      padding: 12px 28px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: transparent;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+.btn-secondary {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 14px 28px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-brand">
-      <img src="logo-header.png" alt="WebAppForge Logo" class="logo-f">
-      <div class="logo-text">WebApp<span>Forge</span></div>
-    </div>
-  </header>
+<!-- HEADER -->
+<header class="site-header">
+  <img src="logo-header.png" alt="WebAppForge logo" />
+  <span>WebApp<span class="forge">Forge</span></span>
+</header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content">
-      <img src="logo-center.png" alt="WebAppForge" class="hero-logo">
+<!-- HERO -->
+<main class="hero">
+  <img src="logo-center.png" alt="WebAppForge logo" class="hero-logo" />
 
-      <h1>WebApp<span>Forge</span></h1>
+  <h1>WebApp<span class="forge">Forge</span></h1>
 
-      <p>
-        The most powerful App & Website Builder ever created.<br>
-        Visual builder, full code control & AI — all in one platform.
-      </p>
+  <p class="subtitle">
+    The most powerful App & Website Builder ever created.<br />
+    Visual builder, full code control & AI — all in one platform.
+  </p>
 
-      <div class="buttons">
-        <button class="btn-primary">Get Started</button>
-        <button class="btn-secondary">View Demo</button>
-      </div>
-    </div>
-  </section>
+  <div class="buttons">
+    <button class="btn-primary">Get Started</button>
+    <button class="btn-secondary">View Demo</button>
+  </div>
+</main>
 
 </body>
 </html>
