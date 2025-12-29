@@ -19,32 +19,34 @@ body {
   min-height: 100vh;
 }
 
-/* ================= HEADER ================= */
+/* ===== HEADER ===== */
 .site-header {
-  position: fixed;
-  top: 24px;
-  left: 28px;
+  position: absolute;
+  top: 20px;
+  left: 24px;
   display: flex;
-  align-items: center;
-  gap: 14px;
-  z-index: 100;
+  flex-direction: column;   /* 🔥 TESTO SOTTO LA F */
+  align-items: flex-start;
+  gap: 6px;                 /* 🔥 DISTANZA MINIMA */
+  z-index: 10;
 }
 
 .site-header img {
-  width: 80px;          /* 🔥 LOGO HEADER GROSSO */
+  width: 160px;             /* 🔥 F GRANDE */
   height: auto;
 }
 
 .site-header span {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .site-header .forge {
   color: #1f7cff;
 }
 
-/* ================= HERO ================= */
+/* ===== HERO ===== */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -55,39 +57,35 @@ body {
   padding: 20px;
 }
 
-/* LOGO CENTRALE */
 .hero-logo {
-  width: 260px;
-  height: auto;
-  margin-bottom: 28px;
+  width: 140px;
+  margin-bottom: 16px;
 }
 
-/* TITOLO */
 .hero h1 {
-  font-size: 58px;
-  font-weight: 800;
-  margin-bottom: 20px;
+  font-size: 52px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
 .hero .forge {
   color: #1f7cff;
 }
 
-/* SOTTOTITOLO */
 .subtitle {
-  max-width: 720px;
+  max-width: 700px;
   font-size: 18px;
   line-height: 1.6;
   opacity: 0.9;
   margin-bottom: 36px;
 }
 
-/* BUTTONS */
+/* ===== BUTTONS ===== */
 .buttons {
   display: flex;
   gap: 16px;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn-primary {
@@ -122,8 +120,7 @@ body {
 
 <!-- HERO -->
 <main class="hero">
-
-  <img src="logo-center.png" alt="WebAppForge Logo" class="hero-logo" />
+  <img src="logo-center.png" alt="WebAppForge logo" class="hero-logo" />
 
   <h1>WebApp<span class="forge">Forge</span></h1>
 
@@ -136,7 +133,6 @@ body {
     <button class="btn-primary">Get Started</button>
     <button class="btn-secondary">View Demo</button>
   </div>
-
 </main>
 
 </body>
