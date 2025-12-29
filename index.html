@@ -19,32 +19,32 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .site-header {
   position: absolute;
   top: 20px;
   left: 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px; /* LOGO VICINISSIMO AL TESTO */
   z-index: 10;
 }
 
 .site-header img {
-  width: 34px; /* LOGO GRANDE */
+  width: 42px; /* LOGO HEADER PIÙ GRANDE */
   height: auto;
 }
 
 .site-header span {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .site-header .forge {
   color: #1f7cff;
 }
 
-/* HERO */
+/* ===== HERO ===== */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -55,22 +55,23 @@ body {
   padding: 20px;
 }
 
-/* LOGO + TESTO CENTRALE */
+/* ===== TITOLO CENTRALE ===== */
 .hero-title {
   display: flex;
   align-items: center;
-  gap: 14px; /* distanza logo-testo */
+  gap: 10px; /* ATTACCATISSIMO */
   margin-bottom: 18px;
 }
 
 .hero-title img {
-  width: 64px; /* LOGO MOLTO PIÙ GRANDE */
+  width: 92px; /* LOGO MOLTO PIÙ GRANDE */
   height: auto;
 }
 
 .hero-title h1 {
-  font-size: 48px;
-  font-weight: 700;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .hero-title .forge {
@@ -85,7 +86,7 @@ body {
   margin-bottom: 36px;
 }
 
-/* BUTTONS */
+/* ===== BUTTONS ===== */
 .buttons {
   display: flex;
   gap: 16px;
@@ -117,13 +118,13 @@ body {
 
 <body>
 
-<!-- HEADER -->
+<!-- ===== HEADER ===== -->
 <header class="site-header">
   <img src="logo-icon.png" alt="WebAppForge logo" />
   <span>WebApp<span class="forge">Forge</span></span>
 </header>
 
-<!-- HERO -->
+<!-- ===== HERO ===== -->
 <main class="hero">
 
   <div class="hero-title">
