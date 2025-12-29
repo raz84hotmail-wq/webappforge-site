@@ -16,6 +16,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 .topbar{
   height:72px;display:flex;align-items:center;gap:12px;
   padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
+  background:#0B1220
 }
 .topbar img{height:40px}
 .brand{font-size:20px;font-weight:800}
@@ -53,14 +54,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   margin-top:10px;background:transparent;
   border:1px solid rgba(255,255,255,0.16);font-weight:600
 }
-.list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.item{
-  padding:12px;border-radius:12px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.07);
-  cursor:pointer
-}
-.item small{opacity:0.75;display:block;margin-top:4px}
 
 /* MAIN */
 .main{
@@ -70,24 +63,38 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
     radial-gradient(circle at bottom left, rgba(31,124,255,0.12), transparent 55%),
     #0B1220
 }
+
 .preview{
   height:100%;border-radius:16px;overflow:hidden;
   border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.03)
+  background:rgba(255,255,255,0.03);
+  position:relative;
 }
-.preview iframe{width:100%;height:100%;border:0;background:#fff}
 
-/* MODAL */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.55);
-  display:none;align-items:center;justify-content:center;z-index:999
+.preview iframe{
+  width:100%;height:100%;border:0;background:#fff
 }
-.modal{
-  width:420px;border-radius:18px;padding:20px;
-  background:#0B1220;border:1px solid rgba(255,255,255,0.14)
+
+/* DROP ZONE */
+.dropzone{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;
+  border:2px dashed rgba(255,255,255,0.25);
+  border-radius:16px;
+  cursor:pointer;
 }
-.modal h3{margin-bottom:14px}
-.modal button{margin-top:10px}
+
+.dropzone.dragover{
+  background:rgba(31,124,255,0.08);
+  border-color:#1F7CFF;
+}
+
+.dropzone h1{font-size:22px;margin-bottom:10px}
+.dropzone p{opacity:0.8;font-size:14px}
+
+/* HIDDEN INPUT */
+input[type=file]{display:none}
 </style>
 </head>
 
@@ -103,109 +110,86 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <div class="wrap">
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <h2>Projects</h2>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>Projects</h2>
 
-  <div class="card">
-    <button class="btn" onclick="openCreateModal()">Create App</button>
-    <button class="btn secondary" onclick="openZip()">Import ZIP</button>
-  </div>
+    <div class="card">
+      <button class="btn" onclick="openZip()">Import ZIP</button>
+    </div>
+  </aside>
 
-  <div class="list" id="projectList"></div>
-</aside>
-
-<!-- MAIN -->
-<main class="main">
-  <div class="preview">
-    <iframe id="previewFrame"></iframe>
-  </div>
-</main>
+  <!-- MAIN -->
+  <main class="main">
+    <div class="preview" id="preview">
+      <div class="dropzone" id="dropzone">
+        <h1>Drop your ZIP here</h1>
+        <p>or click to upload your project</p>
+      </div>
+      <iframe id="previewFrame"></iframe>
+    </div>
+  </main>
 
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="createModal">
-  <div class="modal">
-    <h3>Create new App</h3>
-    <input id="appName" placeholder="App name"
-      style="width:100%;padding:12px;border-radius:10px;border:none;margin-bottom:10px">
-    <button class="btn" onclick="createApp()">Create</button>
-    <button class="btn secondary" onclick="closeCreateModal()">Close</button>
-  </div>
-</div>
-
-<input type="file" id="zipInput" accept=".zip" hidden />
+<input type="file" id="zipInput" accept=".zip" />
 
 <script>
-let projects = JSON.parse(localStorage.getItem("projects") || "[]");
-
-function save(){
-  localStorage.setItem("projects", JSON.stringify(projects));
-  render();
-}
-
-function render(){
-  const list = document.getElementById("projectList");
-  list.innerHTML = "";
-  projects.forEach(p=>{
-    const el = document.createElement("div");
-    el.className="item";
-    el.innerHTML = p.name + "<small>"+p.type+"</small>";
-    el.onclick=()=>{ if(p.url) preview(p.url); };
-    list.appendChild(el);
-  });
-}
-
-function openCreateModal(){
-  document.getElementById("createModal").style.display="flex";
-}
-function closeCreateModal(){
-  document.getElementById("createModal").style.display="none";
-}
-
-function createApp(){
-  const name = document.getElementById("appName").value.trim();
-  if(!name) return;
-  projects.push({name, type:"Blank App"});
-  save();
-  closeCreateModal();
-}
+const dropzone = document.getElementById('dropzone');
+const zipInput = document.getElementById('zipInput');
+const iframe = document.getElementById('previewFrame');
 
 function openZip(){
-  document.getElementById("zipInput").click();
+  zipInput.click();
 }
 
-document.getElementById("zipInput").addEventListener("change", async e=>{
-  const file = e.target.files[0];
-  if(!file) return;
+zipInput.addEventListener('change', e=>{
+  if(e.target.files.length){
+    handleZip(e.target.files[0]);
+  }
+});
 
+dropzone.addEventListener('click', openZip);
+
+dropzone.addEventListener('dragover', e=>{
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+
+dropzone.addEventListener('dragleave', ()=>{
+  dropzone.classList.remove('dragover');
+});
+
+dropzone.addEventListener('drop', e=>{
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if(e.dataTransfer.files.length){
+    handleZip(e.dataTransfer.files[0]);
+  }
+});
+
+async function handleZip(file){
   const zip = await JSZip.loadAsync(file);
   let indexFile = null;
 
-  zip.forEach((path, file)=>{
-    if(path.toLowerCase().endsWith("index.html")) indexFile = file;
+  zip.forEach((path,file)=>{
+    if(path.toLowerCase().endsWith('index.html')){
+      indexFile = file;
+    }
   });
 
   if(!indexFile){
-    alert("index.html not found in ZIP");
+    alert('index.html not found in ZIP');
     return;
   }
 
-  const html = await indexFile.async("text");
-  const blob = new Blob([html], {type:"text/html"});
+  const html = await indexFile.async('text');
+  const blob = new Blob([html], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
 
-  projects.push({name:file.name, type:"ZIP Import", url});
-  save();
-  preview(url);
-});
-
-function preview(url){
-  document.getElementById("previewFrame").src = url;
+  iframe.src = url;
+  dropzone.style.display = 'none';
 }
-
-render();
 </script>
 
 </body>
