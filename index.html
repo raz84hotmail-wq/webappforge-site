@@ -22,27 +22,35 @@ body {
 /* ================= HEADER ================= */
 .site-header {
   position: fixed;
-  top: 0
-    px;
-  left: 0px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  top: 24px;
+  left: 28px;
   z-index: 100;
 }
 
-.site-header img {
-  width: 100px;          /* 🔥 LOGO HEADER GROSSO */
-  height: auto;
+.header-brand {
+  position: relative;
+  display: inline-block;
 }
 
-.site-header span {
+/* LOGO F */
+.header-brand img {
+  width: 100px;              /* dimensione F */
+  height: auto;
+  display: block;
+}
+
+/* TESTO SOTTO L’OMBRA DELLA F */
+.header-text {
+  position: absolute;
+  top: 72px;                 /* 🔧 ABBASSA / ALZA SOLO QUESTO */
+  left: 36px;                /* allineamento sotto la F */
   font-size: 22px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
-.site-header .forge {
-  color: #1f7cff;
+.header-text .forge {
+  color: #1f7cff;            /* Forge BLU come prima */
 }
 
 /* ================= HERO ================= */
@@ -117,8 +125,12 @@ body {
 
 <!-- HEADER -->
 <header class="site-header">
-  <img src="logo-header.png" alt="WebAppForge logo" />
-  <span>WebApp<span class="forge">Forge</span></span>
+  <div class="header-brand">
+    <img src="logo-header.png" alt="WebAppForge logo" />
+    <div class="header-text">
+      WebApp<span class="forge">Forge</span>
+    </div>
+  </div>
 </header>
 
 <!-- HERO -->
