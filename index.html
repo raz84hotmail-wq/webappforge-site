@@ -19,33 +19,31 @@ body {
   min-height: 100vh;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .site-header {
   position: absolute;
-  top: 24px;
-  left: 28px;
+  top: 20px;
+  left: 24px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  z-index: 10;
+  gap: 10px;
 }
 
 .site-header img {
-  width: 120px; /* 🔥 MOLTO PIÙ GRANDE */
+  width: 42px;
   height: auto;
 }
 
-.site-header .brand {
-  font-size: 26px;
-  font-weight: 800;
-  white-space: nowrap;
+.site-header span {
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .site-header .forge {
   color: #1f7cff;
 }
 
-/* ===== HERO ===== */
+/* HERO */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -56,88 +54,58 @@ body {
   padding: 20px;
 }
 
-/* ===== LOGO + TESTO CENTRALE ===== */
-.hero-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;              /* 🔥 ATTACCATISSIMI */
-  margin-bottom: 20px;
-  white-space: nowrap;
-}
-
-.hero-title img {
-  width: 320px;          /* 🔥 ENORME (IL DOPPIO) */
+/* LOGO GIGANTE */
+.hero-logo {
+  width: 260px; /* 🔥 MOLTO GRANDE */
   height: auto;
+  margin-bottom: 24px;
 }
 
-.hero-title h1 {
-  font-size: 96px;       /* 🔥 DOPPIO */
-  font-weight: 900;
-  line-height: 1;
+/* TESTO SOTTO LOGO */
+.hero h1 {
+  font-size: 58px;
+  font-weight: 800;
+  margin-bottom: 20px;
 }
 
-.hero-title .forge {
+.hero .forge {
   color: #1f7cff;
 }
 
-/* ===== SOTTOTITOLO ===== */
 .subtitle {
-  max-width: 760px;
-  font-size: 20px;
+  max-width: 720px;
+  font-size: 18px;
   line-height: 1.6;
   opacity: 0.9;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
-/* ===== BUTTONS ===== */
+/* BUTTONS */
 .buttons {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn-primary {
   background: linear-gradient(90deg, #1f7cff, #e056fd);
   border: none;
-  padding: 16px 34px;
-  border-radius: 14px;
+  padding: 14px 28px;
+  border-radius: 12px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
 }
 
 .btn-secondary {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.2);
-  padding: 16px 34px;
-  border-radius: 14px;
+  padding: 14px 28px;
+  border-radius: 12px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 900px) {
-  .hero-title {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero-title img {
-    width: 200px;
-  }
-
-  .hero-title h1 {
-    font-size: 64px;
-  }
-
-  .site-header img {
-    width: 80px;
-  }
-
-  .site-header .brand {
-    font-size: 20px;
-  }
 }
 </style>
 </head>
@@ -146,20 +114,21 @@ body {
 
 <!-- HEADER -->
 <header class="site-header">
-  <img src="logo-header.png" alt="WebAppForge logo">
-  <div class="brand">WebApp<span class="forge">Forge</span></div>
+  <img src="logo-header.png" alt="WebAppForge logo" />
+  <span>WebApp<span class="forge">Forge</span></span>
 </header>
 
 <!-- HERO -->
 <main class="hero">
 
-  <div class="hero-title">
-    <img src="logo-center.png" alt="WebAppForge logo">
-    <h1>WebApp<span class="forge">Forge</span></h1>
-  </div>
+  <!-- LOGO CENTRALE GIGANTE -->
+  <img src="logo-center.png" alt="WebAppForge Logo" class="hero-logo" />
+
+  <!-- TESTO SOTTO -->
+  <h1>WebApp<span class="forge">Forge</span></h1>
 
   <p class="subtitle">
-    The most powerful App & Website Builder ever created.<br>
+    The most powerful App & Website Builder ever created.<br />
     Visual builder, full code control & AI — all in one platform.
   </p>
 
