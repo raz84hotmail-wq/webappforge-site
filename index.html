@@ -1,184 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WebAppForge</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WebAppForge</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
 
-    body {
-      background: radial-gradient(circle at top, #0f1c3f 0%, #070b18 70%);
-      color: white;
-      min-height: 100vh;
-    }
+body {
+  background: radial-gradient(circle at top, #0f1c3f 0%, #070b18 70%);
+  color: white;
+  min-height: 100vh;
+}
 
-    /* HEADER */
-    .site-header {
-      position: absolute;
-      top: 20px;
-      left: 24px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+/* HEADER */
+.site-header {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
 
-    .logo-icon {
-      height: 28px;
-      width: auto;
-    }
+.site-header img {
+  width: 34px; /* LOGO GRANDE */
+  height: auto;
+}
 
-    .brand-text {
-      font-size: 18px;
-      font-weight: 600;
-    }
+.site-header span {
+  font-size: 18px;
+  font-weight: 600;
+}
 
-    .brand-text .w {
-      color: #ffffff;
-    }
+.site-header .forge {
+  color: #1f7cff;
+}
 
-    .brand-text .f {
-      color: #1f7cff;
-    }
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
 
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 24px;
-    }
+/* LOGO + TESTO CENTRALE */
+.hero-title {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* distanza logo-testo */
+  margin-bottom: 18px;
+}
 
-    .hero-title {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
+.hero-title img {
+  width: 64px; /* LOGO MOLTO PIÙ GRANDE */
+  height: auto;
+}
 
-    .hero-title img {
-      height: 46px;
-      width: auto;
-    }
+.hero-title h1 {
+  font-size: 48px;
+  font-weight: 700;
+}
 
-    .hero-title h1 {
-      font-size: 48px;
-      font-weight: 700;
-    }
+.hero-title .forge {
+  color: #1f7cff;
+}
 
-    .hero-title .w {
-      color: #ffffff;
-    }
+.subtitle {
+  max-width: 700px;
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin-bottom: 36px;
+}
 
-    .hero-title .f {
-      color: #1f7cff;
-    }
+/* BUTTONS */
+.buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-    .subtitle {
-      max-width: 720px;
-      font-size: 18px;
-      line-height: 1.6;
-      opacity: 0.9;
-      margin-bottom: 40px;
-    }
+.btn-primary {
+  background: linear-gradient(90deg, #1f7cff, #e056fd);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    /* BUTTONS */
-    .buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .btn-primary {
-      background: linear-gradient(90deg, #1f7cff, #e056fd);
-      border: none;
-      padding: 14px 30px;
-      border-radius: 12px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn-primary:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 30px rgba(224, 86, 253, 0.35);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 14px 30px;
-      border-radius: 12px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.16);
-    }
-
-    /* MOBILE */
-    @media (max-width: 480px) {
-      .hero-title h1 {
-        font-size: 34px;
-      }
-
-      .hero-title img {
-        height: 36px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-      }
-    }
-  </style>
+.btn-secondary {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 14px 28px;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <img src="logo-header.png" alt="WebAppForge" class="logo-icon" />
-    <div class="brand-text">
-      <span class="w">WebApp</span><span class="f">Forge</span>
-    </div>
-  </header>
+<!-- HEADER -->
+<header class="site-header">
+  <img src="logo-icon.png" alt="WebAppForge logo" />
+  <span>WebApp<span class="forge">Forge</span></span>
+</header>
 
-  <!-- HERO -->
-  <main class="hero">
+<!-- HERO -->
+<main class="hero">
 
-    <div class="hero-title">
-      <img src="logo-header.png" alt="WebAppForge" />
-      <h1>
-        <span class="w">WebApp</span><span class="f">Forge</span>
-      </h1>
-    </div>
+  <div class="hero-title">
+    <img src="logo-icon.png" alt="WebAppForge logo" />
+    <h1>WebApp<span class="forge">Forge</span></h1>
+  </div>
 
-    <p class="subtitle">
-      The most powerful App & Website Builder ever created.<br />
-      Visual builder, full code control & AI — all in one platform.
-    </p>
+  <p class="subtitle">
+    The most powerful App & Website Builder ever created.<br />
+    Visual builder, full code control & AI — all in one platform.
+  </p>
 
-    <div class="buttons">
-      <button class="btn-primary">Get Started</button>
-      <button class="btn-secondary">View Demo</button>
-    </div>
+  <div class="buttons">
+    <button class="btn-primary">Get Started</button>
+    <button class="btn-secondary">View Demo</button>
+  </div>
 
-  </main>
+</main>
 
 </body>
 </html>
