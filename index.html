@@ -33,9 +33,9 @@
       display: inline-block;
     }
 
-    /* LOGO F (GRANDE) */
+    /* F HEADER (GRANDE) */
     .logo-f {
-      width: 96px;          /* <<< DIMENSIONE F */
+      width: 96px;
       height: auto;
       display: block;
     }
@@ -43,8 +43,8 @@
     /* TESTO SOTTO L’OMBRA DELLA F */
     .logo-text {
       position: absolute;
-      top: 62px;            /* <<< SOTTO L’OMBRA */
-      left: 34px;           /* <<< ALLINEATO ALLA F */
+      top: 70px;   /* distanza corretta */
+      left: 34px;
       font-size: 20px;
       font-weight: 700;
       white-space: nowrap;
@@ -56,7 +56,7 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* ================= HERO ================= */
+    /* ================= HERO (NON TOCCATO) ================= */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -70,8 +70,9 @@
       max-width: 720px;
     }
 
+    /* F CENTRALE – RIPRISTINATA */
     .hero-logo {
-      width: 90px;
+      width: 120px;      /* ← dimensione originale */
       margin-bottom: 24px;
     }
 
