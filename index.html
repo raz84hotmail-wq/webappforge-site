@@ -19,31 +19,32 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 .site-header {
-  position: absolute;
-  top: 20px;
-  left: 24px;
+  position: fixed;
+  top: 24px;
+  left: 28px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
+  z-index: 100;
 }
 
 .site-header img {
-  width: 42px;
+  width: 80px;          /* 🔥 LOGO HEADER GROSSO */
   height: auto;
 }
 
 .site-header span {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
 }
 
 .site-header .forge {
   color: #1f7cff;
 }
 
-/* HERO */
+/* ================= HERO ================= */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -54,14 +55,14 @@ body {
   padding: 20px;
 }
 
-/* LOGO GIGANTE */
+/* LOGO CENTRALE */
 .hero-logo {
-  width: 260px; /* 🔥 MOLTO GRANDE */
+  width: 260px;
   height: auto;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
-/* TESTO SOTTO LOGO */
+/* TITOLO */
 .hero h1 {
   font-size: 58px;
   font-weight: 800;
@@ -72,6 +73,7 @@ body {
   color: #1f7cff;
 }
 
+/* SOTTOTITOLO */
 .subtitle {
   max-width: 720px;
   font-size: 18px;
@@ -121,10 +123,8 @@ body {
 <!-- HERO -->
 <main class="hero">
 
-  <!-- LOGO CENTRALE GIGANTE -->
   <img src="logo-center.png" alt="WebAppForge Logo" class="hero-logo" />
 
-  <!-- TESTO SOTTO -->
   <h1>WebApp<span class="forge">Forge</span></h1>
 
   <p class="subtitle">
