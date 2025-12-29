@@ -129,7 +129,8 @@
 
     <div class="card">
       <button class="btn" onclick="openCreateModal()">Create App</button>
-      <button class="btn secondary">Import Project (soon)</button>
+      <button class="btn secondary" onclick="triggerZipUpload()">Import Project</button>
+      <input id="zipInput" type="file" accept=".zip" style="display:none" onchange="handleZipUpload(event)">
     </div>
 
     <div class="list">
@@ -174,7 +175,7 @@
       Blank App
     </button>
 
-    <button class="btn secondary" onclick="alert('Import ZIP – next step')">
+    <button class="btn secondary" onclick="triggerZipUpload()">
       Import ZIP
     </button>
 
@@ -189,6 +190,8 @@
 </div>
 
 <script>
+  let uploadedZip = null;
+
   function openPreview(path){
     document.getElementById('previewFrame').src = path;
   }
@@ -197,6 +200,22 @@
   }
   function closeCreateModal(){
     document.getElementById('createModal').style.display='none';
+  }
+
+  function triggerZipUpload(){
+    document.getElementById('zipInput').click();
+  }
+
+  function handleZipUpload(event){
+    const file = event.target.files[0];
+    if(!file) return;
+    if(!file.name.toLowerCase().endsWith('.zip')){
+      alert('Please upload a .zip file');
+      return;
+    }
+    uploadedZip = file;
+    closeCreateModal();
+    alert('ZIP uploaded: ' + file.name);
   }
 </script>
 
