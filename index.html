@@ -26,17 +26,17 @@ body {
   left: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   z-index: 10;
 }
 
 .site-header img {
-  width: 26px;
+  width: 48px; /* LOGO HEADER PIÙ GRANDE */
   height: auto;
 }
 
 .site-header span {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
 }
 
@@ -55,16 +55,16 @@ body {
   padding: 20px;
 }
 
-/* LOGO + TITOLO */
+/* TITOLO CENTRALE */
 .hero-title {
   display: flex;
   align-items: center;
-  gap: 10px; /* logo MOLTO vicino al testo */
-  margin-bottom: 16px;
+  gap: 18px; /* LOGO MOLTO VICINO AL TESTO */
+  margin-bottom: 20px;
 }
 
 .hero-title img {
-  width: 72px;   /* LOGO GRANDE */
+  width: 96px; /* LOGO CENTRALE GRANDE */
   height: auto;
 }
 
@@ -77,6 +77,7 @@ body {
   color: #1f7cff;
 }
 
+/* SOTTOTITOLO */
 .subtitle {
   max-width: 720px;
   font-size: 18px;
@@ -89,6 +90,7 @@ body {
 .buttons {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -116,15 +118,17 @@ body {
 
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
-  <img src="logo-f.png" alt="WebAppForge logo">
+  <img src="logo-header.png" alt="WebAppForge logo">
   <span>WebApp<span class="forge">Forge</span></span>
 </header>
 
+<!-- HERO -->
 <main class="hero">
 
   <div class="hero-title">
-    <img src="logo-f.png" alt="WebAppForge logo">
+    <img src="logo-center.png" alt="WebAppForge logo">
     <h1>WebApp<span class="forge">Forge</span></h1>
   </div>
 
