@@ -19,24 +19,23 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .site-header {
   position: absolute;
   top: 20px;
   left: 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   z-index: 10;
 }
 
 .site-header img {
-  width: 48px; /* LOGO HEADER PIÙ GRANDE */
-  height: auto;
+  width: 42px; /* header logo */
 }
 
 .site-header span {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -44,7 +43,7 @@ body {
   color: #1f7cff;
 }
 
-/* HERO */
+/* ===== HERO ===== */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -55,22 +54,23 @@ body {
   padding: 20px;
 }
 
-/* TITOLO CENTRALE */
+/* LOGO + TITOLO */
 .hero-title {
   display: flex;
   align-items: center;
-  gap: 18px; /* LOGO MOLTO VICINO AL TESTO */
-  margin-bottom: 20px;
+  gap: 6px;              /* MOLTO VICINO */
+  margin-bottom: 18px;
 }
 
 .hero-title img {
-  width: 96px; /* LOGO CENTRALE GRANDE */
+  width: 110px;          /* LOGO F MOLTO GRANDE */
   height: auto;
 }
 
 .hero-title h1 {
-  font-size: 52px;
+  font-size: 56px;
   font-weight: 700;
+  line-height: 1;
 }
 
 .hero-title .forge {
@@ -97,7 +97,7 @@ body {
 .btn-primary {
   background: linear-gradient(90deg, #1f7cff, #e056fd);
   border: none;
-  padding: 14px 28px;
+  padding: 14px 30px;
   border-radius: 12px;
   color: white;
   font-size: 16px;
@@ -107,7 +107,7 @@ body {
 .btn-secondary {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.2);
-  padding: 14px 28px;
+  padding: 14px 30px;
   border-radius: 12px;
   color: white;
   font-size: 16px;
