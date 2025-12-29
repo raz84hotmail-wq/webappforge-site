@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>WebAppForge – AI App & Website Builder</title>
-
 <link rel="canonical" href="https://web-app-forge.com">
-
 <meta name="description" content="WebAppForge is the most powerful AI-powered app and website builder. Visual builder, full code control and AI — all in one platform.">
 
 <style>
@@ -16,17 +15,18 @@
   box-sizing: border-box;
   font-family: Inter, sans-serif;
 }
+
 html { scroll-behavior: smooth; }
+
 body {
   background: radial-gradient(circle at top, #0f1c3f 0%, #070b18 70%);
   color: white;
-  min-height: 100vh;
 }
-  
+
 /* ================= HEADER ================= */
 .site-header {
   position: fixed;
-  top: 00px;
+  top: 0;
   left: 10px;
   z-index: 5;
   pointer-events: none;
@@ -37,32 +37,29 @@ body {
   display: inline-block;
 }
 
-/* LOGO F */
 .header-brand img {
-  width: 100px;              /* dimensione F */
+  width: 100px;
   height: auto;
   display: block;
 }
 
-/* TESTO SOTTO L’OMBRA DELLA F */
 .header-text {
   position: absolute;
-  top: 50px;                 /* 🔧 ABBASSA / ALZA SOLO QUESTO */
-  left: 68px;                /* allineamento sotto la F */
+  top: 50px;
+  left: 68px;
   font-size: 22px;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .header-text .forge {
-  color: #1f7cff;            /* Forge BLU come prima */
+  color: #1f7cff;
 }
 
 /* ================= HERO ================= */
 .hero {
   position: relative;
   z-index: 10;
-
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -71,15 +68,14 @@ body {
   text-align: center;
   padding: 20px;
 }
-/* LOGO CENTRALE */
+
 .hero-logo {
-  width: 300px;               /* dimensione F */
-  height: auto;
-  transform: translateY(20px); /* SU / GIÙ */
-  margin-left: 50px;          /* 👉 DESTRA */
+  width: 300px;
+  transform: translateY(20px);
+  margin-left: 50px;
   margin-bottom: 28px;
 }
-/* TITOLO */
+
 .hero h1 {
   font-size: 58px;
   font-weight: 800;
@@ -90,7 +86,6 @@ body {
   color: #1f7cff;
 }
 
-/* SOTTOTITOLO */
 .subtitle {
   max-width: 720px;
   font-size: 18px;
@@ -104,20 +99,19 @@ body {
   display: flex;
   gap: 16px;
   justify-content: center;
-  flex-wrap: wrap;
 }
+
 .buttons a {
   text-decoration: none;
   display: inline-block;
 }
+
 .btn-primary {
   background: linear-gradient(90deg, #1f7cff, #e056fd);
-  border: none;
   padding: 14px 28px;
   border-radius: 12px;
   color: white;
   font-size: 16px;
-  cursor: pointer;
 }
 
 .btn-secondary {
@@ -127,14 +121,18 @@ body {
   border-radius: 12px;
   color: white;
   font-size: 16px;
-  cursor: pointer;
+}
+
+/* ================= DESTINATION SECTIONS ================= */
+.section {
+  min-height: 100vh;
+  padding: 100px 20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
   <div class="header-brand">
     <img src="logo-header.png" alt="WebAppForge logo" />
@@ -144,26 +142,22 @@ body {
   </div>
 </header>
 
-<!-- HERO -->
 <main class="hero">
-
   <img src="logo-center.png" alt="WebAppForge Logo" class="hero-logo" />
-
   <h1>WebApp<span class="forge">Forge</span></h1>
-
   <p class="subtitle">
     The most powerful App & Website Builder ever created.<br />
     Visual builder, full code control & AI — all in one platform.
   </p>
 
- <div class="buttons">
-  <a href="#get-started" class="btn-primary">Get Started</a>
-  <a href="#demo" class="btn-secondary">View Demo</a>
-</div>
-<!-- DESTINAZIONI BOTTONI -->
-<div id="get-started"></div>
-<div id="demo"></div>
+  <div class="buttons">
+    <a href="#get-started" class="btn-primary">Get Started</a>
+    <a href="#demo" class="btn-secondary">View Demo</a>
+  </div>
 </main>
+
+<section id="get-started" class="section"></section>
+<section id="demo" class="section"></section>
 
 </body>
 </html>
