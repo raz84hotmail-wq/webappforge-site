@@ -118,28 +118,7 @@
       background:#fff;
     }
 
-    .preview-empty{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:24px;
-      color:rgba(255,255,255,0.85);
-    }
-    .preview-empty h1{
-      font-size:22px;
-      margin-bottom:10px;
-    }
-    .preview-empty p{
-      opacity:0.85;
-      line-height:1.5;
-      max-width:520px;
-      margin:0 auto;
-    }
-
-    /* AI CHAT PLACEHOLDER (BOTTOM RIGHT) */
+    /* AI CHAT PLACEHOLDER */
     .ai{
       position:absolute;
       right:22px;
@@ -214,11 +193,13 @@
   <div class="wrap">
     <!-- SIDEBAR -->
     <aside class="sidebar">
-      <h2>Projects</h2>
+      <h2>Dashboard</h2>
 
       <div class="card">
-        <button class="btn">+ New Project</button>
-        <button class="btn secondary">Upload ZIP (soon)</button>
+        <button class="btn" onclick="selectAction('create')">Create App</button>
+        <button class="btn secondary" onclick="selectAction('import')">Import Project</button>
+        <button class="btn secondary" onclick="selectAction('deploy')">Deploy</button>
+        <button class="btn secondary" onclick="selectAction('settings')">Settings</button>
       </div>
 
       <div class="list">
@@ -227,9 +208,9 @@
           <small>Preview the site homepage</small>
         </div>
 
-        <div class="item" onclick="openPreview('index.html')">
-          Demo Project
-          <small>Placeholder project</small>
+        <div class="item" onclick="openPreview('dashboard.html')">
+          Dashboard
+          <small>Preview the dashboard UI</small>
         </div>
       </div>
     </aside>
@@ -244,8 +225,8 @@
       <div class="ai">
         <div class="ai-header"><span class="dot"></span> AI Assistant (placeholder)</div>
         <div class="ai-body">
-          Qui ci mettiamo l’AI dopo: chat + screenshot guidance.<br><br>
-          Per ora: dashboard + preview live.
+          Qui entrerà l’AI di WebAppForge.<br><br>
+          Chat + guida visiva + automazioni.
         </div>
         <div class="ai-input">
           <input placeholder="Ask WebAppForge..." disabled />
@@ -258,6 +239,10 @@
   <script>
     function openPreview(path){
       document.getElementById('previewFrame').src = path;
+    }
+
+    function selectAction(action){
+      alert("Action: " + action + " (next step: modal)");
     }
   </script>
 </body>
