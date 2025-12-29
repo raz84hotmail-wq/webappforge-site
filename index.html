@@ -19,7 +19,7 @@ body {
   min-height: 100vh;
 }
 
-/* ===== HEADER ===== */
+/* ===== HEADER (ALTO SINISTRA) ===== */
 .site-header {
   position: absolute;
   top: 20px;
@@ -31,12 +31,15 @@ body {
 }
 
 .site-header img {
-  width: 42px; /* header logo */
+  width: 84px; /* 2x rispetto a prima */
+  height: auto;
 }
 
-.site-header span {
-  font-size: 18px;
-  font-weight: 600;
+.site-header .brand {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .site-header .forge {
@@ -54,30 +57,33 @@ body {
   padding: 20px;
 }
 
-/* LOGO + TITOLO */
+/* ===== TITOLO CENTRALE: LOGO + TESTO SU UNA SOLA RIGA ===== */
 .hero-title {
   display: flex;
   align-items: center;
-  gap: 6px;              /* MOLTO VICINO */
+  justify-content: center;
+  gap: 10px;           /* più vicino */
   margin-bottom: 18px;
+  flex-wrap: nowrap;   /* NON andare sotto */
 }
 
 .hero-title img {
-  width: 110px;          /* LOGO F MOLTO GRANDE */
+  width: 220px;        /* 2x rispetto a prima */
   height: auto;
 }
 
 .hero-title h1 {
-  font-size: 56px;
-  font-weight: 700;
+  font-size: 72px;
+  font-weight: 800;
   line-height: 1;
+  white-space: nowrap; /* NON andare sotto */
 }
 
 .hero-title .forge {
   color: #1f7cff;
 }
 
-/* SOTTOTITOLO */
+/* ===== SOTTOTITOLO ===== */
 .subtitle {
   max-width: 720px;
   font-size: 18px;
@@ -86,7 +92,7 @@ body {
   margin-bottom: 36px;
 }
 
-/* BUTTONS */
+/* ===== BUTTONS ===== */
 .buttons {
   display: flex;
   gap: 16px;
@@ -113,6 +119,26 @@ body {
   font-size: 16px;
   cursor: pointer;
 }
+
+/* ===== MOBILE: su schermi piccoli scende sotto per forza ===== */
+@media (max-width: 900px) {
+  .hero-title {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .hero-title img {
+    width: 160px;
+  }
+  .hero-title h1 {
+    font-size: 54px;
+  }
+  .site-header img {
+    width: 60px;
+  }
+  .site-header .brand {
+    font-size: 18px;
+  }
+}
 </style>
 </head>
 
@@ -121,7 +147,7 @@ body {
 <!-- HEADER -->
 <header class="site-header">
   <img src="logo-header.png" alt="WebAppForge logo">
-  <span>WebApp<span class="forge">Forge</span></span>
+  <div class="brand">WebApp<span class="forge">Forge</span></div>
 </header>
 
 <!-- HERO -->
