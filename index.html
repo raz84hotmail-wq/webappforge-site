@@ -19,32 +19,32 @@ body {
   min-height: 100vh;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .site-header {
   position: absolute;
   top: 20px;
   left: 24px;
   display: flex;
   align-items: center;
-  gap: 8px; /* LOGO VICINISSIMO AL TESTO */
+  gap: 8px;
   z-index: 10;
 }
 
 .site-header img {
-  width: 42px; /* LOGO HEADER PIÙ GRANDE */
+  width: 26px;
   height: auto;
 }
 
 .site-header span {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .site-header .forge {
   color: #1f7cff;
 }
 
-/* ===== HERO ===== */
+/* HERO */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -55,23 +55,22 @@ body {
   padding: 20px;
 }
 
-/* ===== TITOLO CENTRALE ===== */
+/* LOGO + TITOLO */
 .hero-title {
   display: flex;
   align-items: center;
-  gap: 10px; /* ATTACCATISSIMO */
-  margin-bottom: 18px;
+  gap: 10px; /* logo MOLTO vicino al testo */
+  margin-bottom: 16px;
 }
 
 .hero-title img {
-  width: 92px; /* LOGO MOLTO PIÙ GRANDE */
+  width: 72px;   /* LOGO GRANDE */
   height: auto;
 }
 
 .hero-title h1 {
-  font-size: 56px;
-  font-weight: 800;
-  line-height: 1;
+  font-size: 52px;
+  font-weight: 700;
 }
 
 .hero-title .forge {
@@ -79,18 +78,17 @@ body {
 }
 
 .subtitle {
-  max-width: 700px;
+  max-width: 720px;
   font-size: 18px;
   line-height: 1.6;
   opacity: 0.9;
   margin-bottom: 36px;
 }
 
-/* ===== BUTTONS ===== */
+/* BUTTONS */
 .buttons {
   display: flex;
   gap: 16px;
-  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -118,22 +116,20 @@ body {
 
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="site-header">
-  <img src="logo-icon.png" alt="WebAppForge logo" />
+  <img src="logo-f.png" alt="WebAppForge logo">
   <span>WebApp<span class="forge">Forge</span></span>
 </header>
 
-<!-- ===== HERO ===== -->
 <main class="hero">
 
   <div class="hero-title">
-    <img src="logo-icon.png" alt="WebAppForge logo" />
+    <img src="logo-f.png" alt="WebAppForge logo">
     <h1>WebApp<span class="forge">Forge</span></h1>
   </div>
 
   <p class="subtitle">
-    The most powerful App & Website Builder ever created.<br />
+    The most powerful App & Website Builder ever created.<br>
     Visual builder, full code control & AI — all in one platform.
   </p>
 
