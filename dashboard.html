@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WebAppForge Dashboard</title>
+
+<!-- JSZip -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
@@ -13,7 +16,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 .topbar{
   height:72px;display:flex;align-items:center;gap:12px;
   padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
-  background:#0B1220
 }
 .topbar img{height:40px}
 .brand{font-size:20px;font-weight:800}
@@ -75,28 +77,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 }
 .preview iframe{width:100%;height:100%;border:0;background:#fff}
 
-/* AI */
-.ai{
-  position:absolute;right:22px;bottom:22px;width:340px;height:420px;
-  border-radius:18px;border:1px solid rgba(255,255,255,0.14);
-  background:rgba(10,16,30,0.88);
-  box-shadow:0 18px 60px rgba(0,0,0,0.35);
-  display:flex;flex-direction:column
-}
-.ai-header{
-  padding:12px 14px;font-weight:800;font-size:13px;
-  background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
-  border-bottom:1px solid rgba(255,255,255,0.10);
-  display:flex;align-items:center;gap:10px
-}
-.dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(180deg,#1F7CFF,#E056FD)}
-.ai-body{flex:1;padding:14px;font-size:13px;opacity:0.9}
-.ai-input{padding:12px;border-top:1px solid rgba(255,255,255,0.10);display:flex;gap:10px}
-.ai-input input{flex:1;border-radius:12px;border:1px solid rgba(255,255,255,0.14);
-background:rgba(255,255,255,0.06);color:#fff;padding:10px 12px}
-.ai-input button{border:none;border-radius:12px;padding:10px 14px;
-background:linear-gradient(90deg,#1F7CFF,#E056FD);color:#fff;font-weight:800}
-
 /* MODAL */
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,0.55);
@@ -107,19 +87,15 @@ background:linear-gradient(90deg,#1F7CFF,#E056FD);color:#fff;font-weight:800}
   background:#0B1220;border:1px solid rgba(255,255,255,0.14)
 }
 .modal h3{margin-bottom:14px}
-.modal input{
-  width:100%;padding:12px;border-radius:12px;
-  border:1px solid rgba(255,255,255,0.16);
-  background:rgba(255,255,255,0.06);
-  color:#fff;margin-bottom:12px
-}
+.modal button{margin-top:10px}
 </style>
 </head>
 
 <body>
 
+<!-- TOP BAR -->
 <div class="topbar">
-  <img src="logo-header.png">
+  <img src="logo-header.png" />
   <div class="brand">WebApp<span class="forge">Forge</span></div>
   <div class="topbar-spacer"></div>
   <div class="pill">Web-first • PWA Ready</div>
@@ -127,70 +103,109 @@ background:linear-gradient(90deg,#1F7CFF,#E056FD);color:#fff;font-weight:800}
 
 <div class="wrap">
 
+<!-- SIDEBAR -->
 <aside class="sidebar">
   <h2>Projects</h2>
 
   <div class="card">
-    <button class="btn" onclick="openModal()">Create App</button>
-    <button class="btn secondary">Import Project</button>
+    <button class="btn" onclick="openCreateModal()">Create App</button>
+    <button class="btn secondary" onclick="openZip()">Import ZIP</button>
   </div>
 
   <div class="list" id="projectList"></div>
 </aside>
 
+<!-- MAIN -->
 <main class="main">
   <div class="preview">
-    <iframe id="previewFrame" src="index.html"></iframe>
-  </div>
-
-  <div class="ai">
-    <div class="ai-header"><span class="dot"></span> AI Assistant</div>
-    <div class="ai-body">AI coming soon.</div>
-    <div class="ai-input">
-      <input disabled placeholder="Ask WebAppForge...">
-      <button disabled>Send</button>
-    </div>
+    <iframe id="previewFrame"></iframe>
   </div>
 </main>
 
 </div>
 
-<div class="modal-overlay" id="modal">
+<!-- MODAL -->
+<div class="modal-overlay" id="createModal">
   <div class="modal">
     <h3>Create new App</h3>
-    <input id="appName" placeholder="App name">
+    <input id="appName" placeholder="App name"
+      style="width:100%;padding:12px;border-radius:10px;border:none;margin-bottom:10px">
     <button class="btn" onclick="createApp()">Create</button>
-    <button class="btn secondary" onclick="closeModal()">Close</button>
+    <button class="btn secondary" onclick="closeCreateModal()">Close</button>
   </div>
 </div>
 
-<script>
-let projects = JSON.parse(localStorage.getItem("projects")||"[]");
+<input type="file" id="zipInput" accept=".zip" hidden />
 
-function renderProjects(){
+<script>
+let projects = JSON.parse(localStorage.getItem("projects") || "[]");
+
+function save(){
+  localStorage.setItem("projects", JSON.stringify(projects));
+  render();
+}
+
+function render(){
   const list = document.getElementById("projectList");
-  list.innerHTML="";
+  list.innerHTML = "";
   projects.forEach(p=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.innerHTML=p+"<small>Blank App</small>";
-    list.appendChild(div);
+    const el = document.createElement("div");
+    el.className="item";
+    el.innerHTML = p.name + "<small>"+p.type+"</small>";
+    el.onclick=()=>{ if(p.url) preview(p.url); };
+    list.appendChild(el);
   });
 }
 
-function openModal(){document.getElementById("modal").style.display="flex";}
-function closeModal(){document.getElementById("modal").style.display="none";}
-
-function createApp(){
-  const name=document.getElementById("appName").value.trim();
-  if(!name)return;
-  projects.push(name);
-  localStorage.setItem("projects",JSON.stringify(projects));
-  closeModal();
-  renderProjects();
+function openCreateModal(){
+  document.getElementById("createModal").style.display="flex";
+}
+function closeCreateModal(){
+  document.getElementById("createModal").style.display="none";
 }
 
-renderProjects();
+function createApp(){
+  const name = document.getElementById("appName").value.trim();
+  if(!name) return;
+  projects.push({name, type:"Blank App"});
+  save();
+  closeCreateModal();
+}
+
+function openZip(){
+  document.getElementById("zipInput").click();
+}
+
+document.getElementById("zipInput").addEventListener("change", async e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const zip = await JSZip.loadAsync(file);
+  let indexFile = null;
+
+  zip.forEach((path, file)=>{
+    if(path.toLowerCase().endsWith("index.html")) indexFile = file;
+  });
+
+  if(!indexFile){
+    alert("index.html not found in ZIP");
+    return;
+  }
+
+  const html = await indexFile.async("text");
+  const blob = new Blob([html], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+
+  projects.push({name:file.name, type:"ZIP Import", url});
+  save();
+  preview(url);
+});
+
+function preview(url){
+  document.getElementById("previewFrame").src = url;
+}
+
+render();
 </script>
 
 </body>
