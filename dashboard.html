@@ -54,14 +54,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   margin-top:10px;background:transparent;
   border:1px solid rgba(255,255,255,0.16);font-weight:600
 }
-.list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.item{
-  padding:12px;border-radius:12px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.07);
-  cursor:pointer
-}
-.item small{opacity:0.75;display:block;margin-top:4px}
 
 /* MAIN */
 .main{
@@ -130,12 +122,6 @@ background:linear-gradient(180deg,#1F7CFF,#E056FD)}
   background:rgba(255,255,255,0.06);
   color:#fff;padding:10px 12px
 }
-.ai-input button{
-  border:none;border-radius:12px;
-  padding:10px 14px;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD);
-  color:#fff;font-weight:800;cursor:pointer
-}
 .icon-btn{
   background:rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.18);
@@ -148,7 +134,6 @@ background:linear-gradient(180deg,#1F7CFF,#E056FD)}
 
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <img src="logo-header.png" />
   <div class="brand">WebApp<span class="forge">Forge</span></div>
@@ -158,7 +143,6 @@ background:linear-gradient(180deg,#1F7CFF,#E056FD)}
 
 <div class="wrap">
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <h2>Dashboard</h2>
   <div class="card">
@@ -167,13 +151,11 @@ background:linear-gradient(180deg,#1F7CFF,#E056FD)}
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="preview">
     <iframe src="index.html"></iframe>
   </div>
 
-  <!-- AI CHAT -->
   <div class="ai" id="aiBox">
     <div class="ai-header">
       <span class="dot"></span>
@@ -195,7 +177,6 @@ background:linear-gradient(180deg,#1F7CFF,#E056FD)}
       <button class="icon-btn" onclick="takeScreenshot()">📸</button>
 
       <input placeholder="Ask WebAppForge..." />
-      <button>Send</button>
     </div>
   </div>
 </main>
@@ -203,258 +184,35 @@ background:linear-gradient(180deg,#1F7CFF,#E056FD)}
 </div>
 
 <script>
-function toggleAI(){
-  aiBox.classList.toggle('collapsed')
-  document.querySelector('.ai-toggle').textContent =
-    aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
-}
+document.addEventListener('DOMContentLoaded', () => {
 
-function sendFile(file){
-  if(!file) return
-  const el=document.createElement('div')
-  el.textContent='📎 '+file.name
-  chatBody.appendChild(el)
-  chatBody.scrollTop=chatBody.scrollHeight
-}
+  const aiBox = document.getElementById('aiBox')
+  const chatBody = document.getElementById('chatBody')
 
-function takeScreenshot(){
-  html2canvas(document.body).then(canvas=>{
-    const img=document.createElement('img')
-    img.src=canvas.toDataURL('image/png')
-    chatBody.appendChild(img)
-    chatBody.scrollTop=chatBody.scrollHeight
-  })
-}
-</script>
+  window.toggleAI = function(){
+    aiBox.classList.toggle('collapsed')
+    document.querySelector('.ai-toggle').textContent =
+      aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
+  }
 
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WebAppForge Dashboard</title>
+  window.sendFile = function(file){
+    if(!file) return
+    const el = document.createElement('div')
+    el.textContent = '📎 ' + file.name
+    chatBody.appendChild(el)
+    chatBody.scrollTop = chatBody.scrollHeight
+  }
 
-<!-- html2canvas for screenshot (NO popup, Safari OK) -->
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  window.takeScreenshot = function(){
+    html2canvas(document.body).then(canvas=>{
+      const img = document.createElement('img')
+      img.src = canvas.toDataURL('image/png')
+      chatBody.appendChild(img)
+      chatBody.scrollTop = chatBody.scrollHeight
+    })
+  }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
-
-/* TOP BAR */
-.topbar{
-  height:72px;display:flex;align-items:center;gap:12px;
-  padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
-  background:#0B1220
-}
-.topbar img{height:40px}
-.brand{font-size:20px;font-weight:800}
-.brand .forge{color:#1F7CFF}
-.topbar-spacer{flex:1}
-.pill{
-  font-size:12px;padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.10)
-}
-
-/* LAYOUT */
-.wrap{height:calc(100vh - 72px);display:grid;grid-template-columns:320px 1fr}
-
-/* SIDEBAR */
-.sidebar{
-  border-right:1px solid rgba(255,255,255,0.08);
-  padding:18px;background:rgba(11,18,32,0.65)
-}
-.sidebar h2{
-  font-size:14px;letter-spacing:0.6px;
-  text-transform:uppercase;opacity:0.85;margin-bottom:12px
-}
-.card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;padding:14px;margin-bottom:12px
-}
-.btn{
-  width:100%;padding:12px 14px;border-radius:12px;
-  border:none;cursor:pointer;color:#fff;font-weight:700;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD)
-}
-.btn.secondary{
-  margin-top:10px;background:transparent;
-  border:1px solid rgba(255,255,255,0.16);font-weight:600
-}
-.list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.item{
-  padding:12px;border-radius:12px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.07);
-  cursor:pointer
-}
-.item small{opacity:0.75;display:block;margin-top:4px}
-
-/* MAIN */
-.main{
-  padding:18px;position:relative;
-  background:
-    radial-gradient(circle at top, rgba(224,86,253,0.10), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(31,124,255,0.12), transparent 55%),
-    #0B1220
-}
-.preview{
-  height:100%;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.03)
-}
-.preview iframe{width:100%;height:100%;border:0;background:#fff}
-
-/* AI CHAT */
-.ai{
-  position:absolute;right:22px;bottom:22px;
-  width:340px;height:420px;
-  border-radius:18px;border:1px solid rgba(255,255,255,0.14);
-  background:rgba(10,16,30,0.9);
-  box-shadow:0 18px 60px rgba(0,0,0,0.35);
-  display:flex;flex-direction:column;
-  transition:height .25s ease;
-}
-.ai.collapsed{height:52px}
-.ai.collapsed .ai-body,
-.ai.collapsed .ai-input{display:none}
-
-.ai-header{
-  padding:12px 14px;
-  font-weight:800;font-size:13px;
-  background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
-  border-bottom:1px solid rgba(255,255,255,0.10);
-  display:flex;align-items:center;gap:10px
-}
-.dot{width:10px;height:10px;border-radius:99px;
-background:linear-gradient(180deg,#1F7CFF,#E056FD)}
-.ai-spacer{flex:1}
-.ai-toggle{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  color:#fff;border-radius:8px;
-  padding:4px 8px;cursor:pointer
-}
-
-.ai-body{
-  flex:1;padding:14px;font-size:13px;opacity:0.9;
-  overflow:auto
-}
-.ai-body img{
-  max-width:100%;
-  border-radius:10px;
-  margin-top:8px;
-  border:1px solid rgba(255,255,255,0.15)
-}
-
-.ai-input{
-  padding:10px;border-top:1px solid rgba(255,255,255,0.10);
-  display:flex;gap:8px;align-items:center
-}
-.ai-input input{
-  flex:1;border-radius:12px;
-  border:1px solid rgba(255,255,255,0.14);
-  background:rgba(255,255,255,0.06);
-  color:#fff;padding:10px 12px
-}
-.ai-input button{
-  border:none;border-radius:12px;
-  padding:10px 14px;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD);
-  color:#fff;font-weight:800;cursor:pointer
-}
-.icon-btn{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:10px;
-  padding:8px;cursor:pointer
-}
-.icon-btn input{display:none}
-</style>
-</head>
-
-<body>
-
-<!-- TOP BAR -->
-<div class="topbar">
-  <img src="logo-header.png" />
-  <div class="brand">WebApp<span class="forge">Forge</span></div>
-  <div class="topbar-spacer"></div>
-  <div class="pill">Web-first • PWA Ready</div>
-</div>
-
-<div class="wrap">
-
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <h2>Dashboard</h2>
-  <div class="card">
-    <button class="btn">Create App</button>
-    <button class="btn secondary">Import Project (soon)</button>
-  </div>
-</aside>
-
-<!-- MAIN -->
-<main class="main">
-  <div class="preview">
-    <iframe src="index.html"></iframe>
-  </div>
-
-  <!-- AI CHAT -->
-  <div class="ai" id="aiBox">
-    <div class="ai-header">
-      <span class="dot"></span>
-      WebAppForge AI
-      <div class="ai-spacer"></div>
-      <button class="ai-toggle" onclick="toggleAI()">⬇️</button>
-    </div>
-
-    <div class="ai-body" id="chatBody">
-      Premi 📸 per mandare lo stato completo alla AI.
-    </div>
-
-    <div class="ai-input">
-      <label class="icon-btn">
-        📎
-        <input type="file" onchange="sendFile(this.files[0])">
-      </label>
-
-      <button class="icon-btn" onclick="takeScreenshot()">📸</button>
-
-      <input placeholder="Ask WebAppForge..." />
-      <button>Send</button>
-    </div>
-  </div>
-</main>
-
-</div>
-
-<script>
-function toggleAI(){
-  aiBox.classList.toggle('collapsed')
-  document.querySelector('.ai-toggle').textContent =
-    aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
-}
-
-function sendFile(file){
-  if(!file) return
-  const el=document.createElement('div')
-  el.textContent='📎 '+file.name
-  chatBody.appendChild(el)
-  chatBody.scrollTop=chatBody.scrollHeight
-}
-
-function takeScreenshot(){
-  html2canvas(document.body).then(canvas=>{
-    const img=document.createElement('img')
-    img.src=canvas.toDataURL('image/png')
-    chatBody.appendChild(img)
-    chatBody.scrollTop=chatBody.scrollHeight
-  })
-}
+})
 </script>
 
 </body>
