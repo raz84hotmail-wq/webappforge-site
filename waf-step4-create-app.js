@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', init);
 })();
 // Load STEP 5 controller (no dashboard.html changes)
 (function(){
-  const s=document.createElement('script');
-  s.src='waf-step5-controller.js';
-  s.async=true;
+  const s = document.createElement('script');
+  s.src = 'waf-step5-controller.js?v=' + Date.now(); // anti-cache
+  s.async = false; // ⬅️ FONDAMENTALE
   document.head.appendChild(s);
 })();
