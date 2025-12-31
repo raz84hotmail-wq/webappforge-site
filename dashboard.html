@@ -234,6 +234,12 @@ function sendSnapshot(){
     chatBody.scrollTop=chatBody.scrollHeight
   })
 }
+  msgInput.addEventListener('keydown', function(e){
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    sendMessage();
+  }
+});
 </script>
 
 </body>
