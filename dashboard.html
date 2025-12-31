@@ -90,7 +90,25 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   border-bottom:1px solid rgba(255,255,255,0.10);
   display:flex;align-items:center;gap:10px
 }
-.dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(180deg,#1F7CFF,#E056FD)}
+
+/* === SOLO MODIFICA CONSENTITA === */
+.ai-logo{
+  width:22px;
+  height:22px;
+}
+.ai-title{
+  font-size:13px;
+  font-weight:800;
+}
+.ai-title .forge{
+  color:#1F7CFF;
+}
+.ai-label{
+  color:#ffffff;
+  font-weight:800;
+}
+/* === FINE MODIFICA === */
+
 .ai-spacer{flex:1}
 .ai-toggle{
   background:rgba(255,255,255,0.08);
@@ -131,10 +149,8 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <body>
 
-<!-- ROOT: SOLO WebAppForge -->
 <div id="wafRoot">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <img src="logo-header.png" />
     <div class="brand">WebApp<span class="forge">Forge</span></div>
@@ -144,7 +160,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
   <div class="wrap">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h2>Dashboard</h2>
       <div class="card">
@@ -153,16 +168,17 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
       </div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
       <div class="preview">
         <iframe id="previewFrame" src="index.html"></iframe>
       </div>
 
-      <!-- AI -->
       <div class="ai" id="aiBox">
         <div class="ai-header">
-          <span class="dot"></span> WebAppForge AI
+          <img src="logo-header.png" class="ai-logo" />
+          <span class="ai-title">
+            WebApp<span class="forge">Forge</span> <span class="ai-label">AI</span>
+          </span>
           <div class="ai-spacer"></div>
           <button class="ai-toggle" onclick="toggleAI()">⬇️</button>
         </div>
