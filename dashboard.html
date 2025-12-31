@@ -137,7 +137,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <div id="wafRoot">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="waf-brand">
       <img src="logo-header.png">
@@ -162,7 +161,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
         <iframe src="index.html"></iframe>
       </div>
 
-      <!-- AI -->
       <div class="ai" id="aiBox">
         <div class="ai-header">
           <div class="waf-brand">
@@ -188,15 +186,53 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
           <button class="icon-btn" onclick="sendMessage()">➤</button>
         </div>
       </div>
-    </main>
 
+    </main>
   </div>
 </div>
 
 <script>
-const aiBox=document.getElementById('aiBox')
+const aiBox = document.getElementById('aiBox')
+const chatBody = document.getElementById('chatBody')
+const wafRoot = document.getElementById('wafRoot')
+const msgInput = document.getElementById('msgInput')
+
 function toggleAI(){
   aiBox.classList.toggle('collapsed')
+}
+
+function sendFile(file){
+  if(!file) return
+  const d=document.createElement('div')
+  d.textContent='📎 '+file.name
+  chatBody.appendChild(d)
+  chatBody.scrollTop=chatBody.scrollHeight
+}
+
+function sendMessage(){
+  const t=msgInput.value.trim()
+  if(!t) return
+  const d=document.createElement('div')
+  d.textContent='🗨️ '+t
+  chatBody.appendChild(d)
+  msgInput.value=''
+  chatBody.scrollTop=chatBody.scrollHeight
+}
+
+function sendSnapshot(){
+  html2canvas(wafRoot,{
+    backgroundColor:null,
+    scale:window.devicePixelRatio || 1,
+    useCORS:true
+  }).then(canvas=>{
+    const img=document.createElement('img')
+    img.src=canvas.toDataURL('image/png')
+    img.style.maxWidth='100%'
+    img.style.borderRadius='12px'
+    img.style.marginTop='8px'
+    chatBody.appendChild(img)
+    chatBody.scrollTop=chatBody.scrollHeight
+  })
 }
 </script>
 
