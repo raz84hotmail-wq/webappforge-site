@@ -5,22 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WebAppForge Dashboard</title>
 
-<!-- Screenshot engine -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
+/* ===== BRAND (IDENTICO AL SITO, SOLO SCALATO) ===== */
+.waf-brand{
+  position:relative;
+  display:inline-block;
+}
+.waf-brand img{
+  width:60px;
+  height:auto;
+  display:block;
+}
+.waf-text{
+  position:absolute;
+  top:30px;
+  left:40px;
+  font-size:18px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.waf-text .forge{color:#1F7CFF}
+.waf-ai{color:#fff;font-weight:700}
+
 /* TOP BAR */
 .topbar{
-  height:72px;display:flex;align-items:center;gap:12px;
+  height:72px;display:flex;align-items:center;
   padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
   background:#0B1220
 }
-.topbar img{height:40px}
-.brand{font-size:20px;font-weight:800}
-.brand .forge{color:#1F7CFF}
 .topbar-spacer{flex:1}
 .pill{
   font-size:12px;padding:8px 12px;border-radius:999px;
@@ -78,37 +95,17 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   background:rgba(10,16,30,0.92);
   box-shadow:0 18px 60px rgba(0,0,0,0.35);
   display:flex;flex-direction:column;
-  transition:height .25s ease;
 }
 .ai.collapsed{height:52px}
 .ai.collapsed .ai-body,
 .ai.collapsed .ai-input{display:none}
 
 .ai-header{
-  padding:12px 14px;font-weight:800;font-size:13px;
+  padding:12px 14px;
   background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
   border-bottom:1px solid rgba(255,255,255,0.10);
-  display:flex;align-items:center;gap:10px
+  display:flex;align-items:center
 }
-
-/* === SOLO MODIFICA CONSENTITA === */
-.ai-logo{
-  width:22px;
-  height:22px;
-}
-.ai-title{
-  font-size:13px;
-  font-weight:800;
-}
-.ai-title .forge{
-  color:#1F7CFF;
-}
-.ai-label{
-  color:#ffffff;
-  font-weight:800;
-}
-/* === FINE MODIFICA === */
-
 .ai-spacer{flex:1}
 .ai-toggle{
   background:rgba(255,255,255,0.08);
@@ -118,17 +115,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 }
 
 .ai-body{flex:1;padding:14px;font-size:13px;overflow:auto}
-.ai-body img{
-  max-width:100%;border-radius:12px;margin-top:10px;
-  border:1px solid rgba(255,255,255,0.15)
-}
-.ai-body pre{
-  white-space:pre-wrap;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.12);
-  padding:10px;border-radius:12px;margin-top:10px
-}
-
 .ai-input{
   padding:10px;border-top:1px solid rgba(255,255,255,0.10);
   display:flex;gap:8px;align-items:center
@@ -151,9 +137,12 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <div id="wafRoot">
 
+  <!-- TOP BAR -->
   <div class="topbar">
-    <img src="logo-header.png" />
-    <div class="brand">WebApp<span class="forge">Forge</span></div>
+    <div class="waf-brand">
+      <img src="logo-header.png">
+      <div class="waf-text">WebApp<span class="forge">Forge</span></div>
+    </div>
     <div class="topbar-spacer"></div>
     <div class="pill">Web-first • PWA Ready</div>
   </div>
@@ -170,15 +159,18 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
     <main class="main">
       <div class="preview">
-        <iframe id="previewFrame" src="index.html"></iframe>
+        <iframe src="index.html"></iframe>
       </div>
 
+      <!-- AI -->
       <div class="ai" id="aiBox">
         <div class="ai-header">
-          <img src="logo-header.png" class="ai-logo" />
-          <span class="ai-title">
-            WebApp<span class="forge">Forge</span> <span class="ai-label">AI</span>
-          </span>
+          <div class="waf-brand">
+            <img src="logo-header.png" style="width:40px">
+            <div class="waf-text" style="top:22px;left:28px;font-size:14px">
+              WebApp<span class="forge">Forge</span> <span class="waf-ai">AI</span>
+            </div>
+          </div>
           <div class="ai-spacer"></div>
           <button class="ai-toggle" onclick="toggleAI()">⬇️</button>
         </div>
@@ -202,53 +194,9 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 </div>
 
 <script>
-const wafRoot  = document.getElementById('wafRoot')
-const aiBox    = document.getElementById('aiBox')
-const chatBody = document.getElementById('chatBody')
-const msgInput = document.getElementById('msgInput')
-
-function scrollBottom(){ chatBody.scrollTop = chatBody.scrollHeight }
-
+const aiBox=document.getElementById('aiBox')
 function toggleAI(){
   aiBox.classList.toggle('collapsed')
-  document.querySelector('.ai-toggle').textContent =
-    aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
-}
-
-function sendFile(file){
-  if(!file) return
-  const d=document.createElement('div')
-  d.textContent='📎 '+file.name
-  chatBody.appendChild(d)
-  scrollBottom()
-}
-
-function sendMessage(){
-  const t=msgInput.value.trim()
-  if(!t) return
-  const d=document.createElement('div')
-  d.textContent='🗨️ '+t
-  chatBody.appendChild(d)
-  msgInput.value=''
-  scrollBottom()
-}
-
-async function sendSnapshot(){
-  const pre=document.createElement('pre')
-  pre.textContent='📸 Screenshot WebAppForge (solo UI interna)'
-  chatBody.appendChild(pre)
-  scrollBottom()
-
-  const canvas=await html2canvas(wafRoot,{
-    backgroundColor:null,
-    scale:window.devicePixelRatio||1,
-    useCORS:true
-  })
-
-  const img=document.createElement('img')
-  img.src=canvas.toDataURL('image/png')
-  chatBody.appendChild(img)
-  scrollBottom()
 }
 </script>
 
