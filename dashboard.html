@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WebAppForge Dashboard</title>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
@@ -12,8 +14,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 /* TOP BAR */
 .topbar{
   height:72px;display:flex;align-items:center;gap:12px;
-  padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
-  background:#0B1220
+  padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08)
 }
 .topbar img{height:40px}
 .brand{font-size:20px;font-weight:800}
@@ -35,7 +36,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 }
 .sidebar h2{
   font-size:14px;letter-spacing:0.6px;
-  text-transform:uppercase;opacity:0.85;margin-bottom:12px
+  text-transform:uppercase;margin-bottom:12px
 }
 .card{
   background:rgba(255,255,255,0.05);
@@ -43,179 +44,143 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   border-radius:14px;padding:14px;margin-bottom:12px
 }
 .btn{
-  width:100%;padding:12px 14px;border-radius:12px;
+  width:100%;padding:12px;border-radius:12px;
   border:none;cursor:pointer;color:#fff;font-weight:700;
   background:linear-gradient(90deg,#1F7CFF,#E056FD)
 }
 .btn.secondary{
   margin-top:10px;background:transparent;
-  border:1px solid rgba(255,255,255,0.16);font-weight:600
+  border:1px solid rgba(255,255,255,0.16)
 }
-.list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.item{
-  padding:12px;border-radius:12px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.07);
-  cursor:pointer
-}
-.item small{opacity:0.75;display:block;margin-top:4px}
 
 /* MAIN */
 .main{
   padding:18px;position:relative;
-  background:
-    radial-gradient(circle at top, rgba(224,86,253,0.10), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(31,124,255,0.12), transparent 55%),
-    #0B1220
+  background:#0B1220
 }
 .preview{
   height:100%;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.03)
+  border:1px solid rgba(255,255,255,0.10)
 }
-.preview iframe{width:100%;height:100%;border:0;background:#fff}
+.preview iframe{width:100%;height:100%;border:0}
 
 /* AI CHAT */
 .ai{
-  position:absolute;right:22px;bottom:22px;width:360px;height:480px;
+  position:absolute;right:22px;bottom:22px;
+  width:340px;height:440px;
   border-radius:18px;border:1px solid rgba(255,255,255,0.14);
   background:rgba(10,16,30,0.92);
-  box-shadow:0 18px 60px rgba(0,0,0,0.35);
-  display:flex;flex-direction:column
+  display:flex;flex-direction:column;
+  transition:all .3s ease
 }
+.ai.minimized{height:48px}
 .ai-header{
-  padding:12px 14px;font-weight:800;font-size:13px;
-  background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
-  border-bottom:1px solid rgba(255,255,255,0.10);
-  display:flex;align-items:center;gap:10px
+  padding:10px 14px;font-weight:800;font-size:13px;
+  background:linear-gradient(90deg,#1F7CFF,#E056FD);
+  display:flex;align-items:center;gap:8px;cursor:pointer
 }
-.dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(180deg,#1F7CFF,#E056FD)}
-.ai-body{
-  flex:1;padding:14px;font-size:13px;overflow:auto;
-  display:flex;flex-direction:column;gap:10px
-}
-.msg{
-  padding:10px 12px;border-radius:12px;
-  background:rgba(255,255,255,0.08)
-}
-.msg.user{background:rgba(31,124,255,0.25)}
+.ai-body{flex:1;padding:14px;font-size:13px;overflow:auto}
+.ai-body img{max-width:100%;border-radius:10px;margin-top:10px}
 .ai-input{
   padding:10px;border-top:1px solid rgba(255,255,255,0.10);
   display:flex;gap:8px;align-items:center
 }
 .ai-input input{
-  flex:1;border-radius:12px;border:1px solid rgba(255,255,255,0.14);
-  background:rgba(255,255,255,0.06);color:#fff;padding:10px 12px
-}
-.ai-input button{
-  border:none;border-radius:12px;padding:10px 12px;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD);
-  color:#fff;font-weight:800;cursor:pointer
+  flex:1;border-radius:10px;border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.06);color:#fff;padding:8px
 }
 .icon-btn{
-  width:38px;height:38px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.08);
-  cursor:pointer;font-size:16px
+  width:36px;height:36px;border-radius:10px;
+  border:none;cursor:pointer;font-size:16px;
+  background:rgba(255,255,255,0.12);color:#fff
 }
-.icon-btn:hover{background:rgba(255,255,255,0.15)}
-input[type=file]{display:none}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  display:none;align-items:center;justify-content:center
+}
+.modal{
+  width:420px;border-radius:18px;padding:20px;
+  background:#0B1220;border:1px solid rgba(255,255,255,0.14)
+}
 </style>
 </head>
 
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <img src="logo-header.png" />
+  <img src="logo-header.png">
   <div class="brand">WebApp<span class="forge">Forge</span></div>
   <div class="topbar-spacer"></div>
   <div class="pill">Web-first • PWA Ready</div>
 </div>
 
 <div class="wrap">
-
-<aside class="sidebar">
-  <h2>Dashboard</h2>
-  <div class="card">
-    <button class="btn" onclick="openCreateModal()">Create App</button>
-    <button class="btn secondary">Import Project (soon)</button>
-  </div>
-  <div class="list">
-    <div class="item" onclick="openPreview('index.html')">
-      Landing (current)
-      <small>Preview homepage</small>
+  <aside class="sidebar">
+    <h2>Dashboard</h2>
+    <div class="card">
+      <button class="btn" onclick="openCreateModal()">Create App</button>
+      <button class="btn secondary">Import Project (soon)</button>
     </div>
-  </div>
-</aside>
+  </aside>
 
-<main class="main">
-  <div class="preview">
-    <iframe id="previewFrame" src="index.html"></iframe>
-  </div>
-
-  <!-- AI CHAT -->
-  <div class="ai">
-    <div class="ai-header"><span class="dot"></span> WebAppForge AI</div>
-    <div class="ai-body" id="chat"></div>
-
-    <div class="ai-input">
-      <div class="icon-btn" onclick="takeScreenshot()">📸</div>
-      <div class="icon-btn" onclick="fileInput.click()">📎</div>
-      <input id="fileInput" type="file" multiple />
-      <input id="msgInput" placeholder="Ask WebAppForge..." />
-      <button onclick="sendMsg()">Send</button>
+  <main class="main" id="captureArea">
+    <div class="preview">
+      <iframe src="index.html"></iframe>
     </div>
-  </div>
-</main>
 
+    <!-- AI CHAT -->
+    <div class="ai" id="aiBox">
+      <div class="ai-header" onclick="toggleAI()">● WebAppForge AI</div>
+      <div class="ai-body" id="aiBody">
+        AI pronta a guidarti 🚀
+      </div>
+      <div class="ai-input">
+        <button class="icon-btn" onclick="takeScreenshot()">📸</button>
+        <button class="icon-btn" onclick="fileInput.click()">📎</button>
+        <input id="aiText" placeholder="Ask WebAppForge...">
+        <button class="icon-btn">➤</button>
+        <input type="file" id="fileInput" hidden onchange="sendFile(this)">
+      </div>
+    </div>
+  </main>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="createModal">
   <div class="modal">
     <h3>Create new App</h3>
     <button class="btn">Blank App</button>
     <button class="btn secondary">Import ZIP</button>
-    <button class="btn secondary">Import GitHub Repo</button>
+    <button class="btn secondary">GitHub Repo</button>
     <button class="btn secondary" onclick="closeCreateModal()">Close</button>
   </div>
 </div>
 
 <script>
-const chat = document.getElementById('chat');
-const fileInput = document.getElementById('fileInput');
-
-function addMsg(text, cls=''){
-  const div=document.createElement('div');
-  div.className='msg '+cls;
-  div.textContent=text;
-  chat.appendChild(div);
-  chat.scrollTop=chat.scrollHeight;
+function toggleAI(){
+  document.getElementById('aiBox').classList.toggle('minimized')
 }
-
-function sendMsg(){
-  const input=document.getElementById('msgInput');
-  if(!input.value) return;
-  addMsg(input.value,'user');
-  addMsg('AI received your message (placeholder)');
-  input.value='';
+function openCreateModal(){
+  document.getElementById('createModal').style.display='flex'
 }
-
-fileInput.onchange=()=>{
-  [...fileInput.files].forEach(f=>{
-    addMsg('📎 File uploaded: '+f.name,'user');
-  });
+function closeCreateModal(){
+  document.getElementById('createModal').style.display='none'
 }
-
 function takeScreenshot(){
-  addMsg('📸 Screenshot captured and sent to AI (frontend placeholder)','user');
-  addMsg('AI is analyzing the screen…');
+  html2canvas(document.getElementById('captureArea')).then(canvas=>{
+    const img = document.createElement('img')
+    img.src = canvas.toDataURL()
+    document.getElementById('aiBody').appendChild(img)
+  })
 }
-
-function openPreview(p){document.getElementById('previewFrame').src=p}
-function openCreateModal(){document.getElementById('createModal').style.display='flex'}
-function closeCreateModal(){document.getElementById('createModal').style.display='none'}
+function sendFile(input){
+  const file = input.files[0]
+  if(!file) return
+  const div = document.createElement('div')
+  div.textContent = '📎 ' + file.name
+  document.getElementById('aiBody').appendChild(div)
+}
 </script>
 
 </body>
