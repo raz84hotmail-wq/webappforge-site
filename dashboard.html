@@ -1,195 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WebAppForge Dashboard</title>
+  <meta charset="UTF-8" />
+  <title>WebAppForge – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- JSZip -->
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0B1220;
+      color: #fff;
+    }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
+    header {
+      background: #0B1220;
+      padding: 16px;
+      border-bottom: 1px solid #1F7CFF;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-/* TOP BAR */
-.topbar{
-  height:72px;display:flex;align-items:center;gap:12px;
-  padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
-  background:#0B1220
-}
-.topbar img{height:40px}
-.brand{font-size:20px;font-weight:800}
-.brand .forge{color:#1F7CFF}
-.topbar-spacer{flex:1}
-.pill{
-  font-size:12px;padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.10)
-}
+    header img {
+      height: 32px;
+    }
 
-/* LAYOUT */
-.wrap{height:calc(100vh - 72px);display:grid;grid-template-columns:320px 1fr}
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
 
-/* SIDEBAR */
-.sidebar{
-  border-right:1px solid rgba(255,255,255,0.08);
-  padding:18px;background:rgba(11,18,32,0.65)
-}
-.sidebar h2{
-  font-size:14px;letter-spacing:0.6px;
-  text-transform:uppercase;opacity:0.85;margin-bottom:12px
-}
-.card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;padding:14px;margin-bottom:12px
-}
-.btn{
-  width:100%;padding:12px 14px;border-radius:12px;
-  border:none;cursor:pointer;color:#fff;font-weight:700;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD)
-}
-.btn.secondary{
-  margin-top:10px;background:transparent;
-  border:1px solid rgba(255,255,255,0.16);font-weight:600
-}
+    main {
+      padding: 20px;
+    }
 
-/* MAIN */
-.main{
-  padding:18px;position:relative;
-  background:
-    radial-gradient(circle at top, rgba(224,86,253,0.10), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(31,124,255,0.12), transparent 55%),
-    #0B1220
-}
+    .card {
+      background: #111A2E;
+      border: 1px solid #1F7CFF;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
 
-.preview{
-  height:100%;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.03);
-  position:relative;
-}
+    .card h2 {
+      margin-top: 0;
+      font-size: 16px;
+    }
 
-.preview iframe{
-  width:100%;height:100%;border:0;background:#fff
-}
+    button {
+      background: #1F7CFF;
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-/* DROP ZONE */
-.dropzone{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;text-align:center;
-  border:2px dashed rgba(255,255,255,0.25);
-  border-radius:16px;
-  cursor:pointer;
-}
+    button:hover {
+      background: #3A8DFF;
+    }
 
-.dropzone.dragover{
-  background:rgba(31,124,255,0.08);
-  border-color:#1F7CFF;
-}
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: none;
+    }
 
-.dropzone h1{font-size:22px;margin-bottom:10px}
-.dropzone p{opacity:0.8;font-size:14px}
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #1F7CFF;
+      border-radius: 8px;
+      background: white;
+    }
 
-/* HIDDEN INPUT */
-input[type=file]{display:none}
-</style>
+    .status {
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <img src="logo-header.png" />
-  <div class="brand">WebApp<span class="forge">Forge</span></div>
-  <div class="topbar-spacer"></div>
-  <div class="pill">Web-first • PWA Ready</div>
-</div>
+<header>
+  <img src="logo-header.png" alt="WebAppForge">
+  <h1>WebAppForge – Dashboard</h1>
+</header>
 
-<div class="wrap">
+<main>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h2>Projects</h2>
+  <!-- CREATE APP -->
+  <div class="card">
+    <h2>Create App</h2>
+    <p class="status">Import a project from GitHub</p>
 
-    <div class="card">
-      <button class="btn" onclick="openZip()">Import ZIP</button>
-    </div>
-  </aside>
+    <input
+      type="text"
+      id="githubUrl"
+      placeholder="https://github.com/username/repository"
+    />
 
-  <!-- MAIN -->
-  <main class="main">
-    <div class="preview" id="preview">
-      <div class="dropzone" id="dropzone">
-        <h1>Drop your ZIP here</h1>
-        <p>or click to upload your project</p>
-      </div>
-      <iframe id="previewFrame"></iframe>
-    </div>
-  </main>
+    <button onclick="importFromGithub()">Import from GitHub</button>
+    <p id="githubStatus" class="status"></p>
+  </div>
 
-</div>
+  <!-- PREVIEW -->
+  <div class="card">
+    <h2>Live Preview</h2>
+    <iframe id="preview"></iframe>
+  </div>
 
-<input type="file" id="zipInput" accept=".zip" />
+</main>
 
 <script>
-const dropzone = document.getElementById('dropzone');
-const zipInput = document.getElementById('zipInput');
-const iframe = document.getElementById('previewFrame');
+  async function importFromGithub() {
+    const url = document.getElementById('githubUrl').value.trim();
+    const status = document.getElementById('githubStatus');
 
-function openZip(){
-  zipInput.click();
-}
-
-zipInput.addEventListener('change', e=>{
-  if(e.target.files.length){
-    handleZip(e.target.files[0]);
-  }
-});
-
-dropzone.addEventListener('click', openZip);
-
-dropzone.addEventListener('dragover', e=>{
-  e.preventDefault();
-  dropzone.classList.add('dragover');
-});
-
-dropzone.addEventListener('dragleave', ()=>{
-  dropzone.classList.remove('dragover');
-});
-
-dropzone.addEventListener('drop', e=>{
-  e.preventDefault();
-  dropzone.classList.remove('dragover');
-  if(e.dataTransfer.files.length){
-    handleZip(e.dataTransfer.files[0]);
-  }
-});
-
-async function handleZip(file){
-  const zip = await JSZip.loadAsync(file);
-  let indexFile = null;
-
-  zip.forEach((path,file)=>{
-    if(path.toLowerCase().endsWith('index.html')){
-      indexFile = file;
+    if (!url.startsWith('https://github.com/')) {
+      status.textContent = 'Invalid GitHub URL';
+      return;
     }
-  });
 
-  if(!indexFile){
-    alert('index.html not found in ZIP');
-    return;
+    status.textContent = 'Fetching repository…';
+
+    try {
+      const apiUrl = url
+        .replace('https://github.com/', 'https://api.github.com/repos/')
+        .replace(/\/$/, '');
+
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+
+      if (!data.contents_url) {
+        status.textContent = 'Repository not accessible';
+        return;
+      }
+
+      const contentsUrl = data.contents_url.replace('{+path}', '');
+      const contentsRes = await fetch(contentsUrl);
+      const files = await contentsRes.json();
+
+      const indexFile = files.find(f => f.name === 'index.html');
+
+      if (!indexFile) {
+        status.textContent = 'index.html not found in repo';
+        return;
+      }
+
+      const fileRes = await fetch(indexFile.download_url);
+      const html = await fileRes.text();
+
+      const blob = new Blob([html], { type: 'text/html' });
+      const previewUrl = URL.createObjectURL(blob);
+
+      document.getElementById('preview').src = previewUrl;
+      status.textContent = 'GitHub project loaded successfully';
+
+    } catch (e) {
+      console.error(e);
+      status.textContent = 'Error importing repository';
+    }
   }
-
-  const html = await indexFile.async('text');
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-
-  iframe.src = url;
-  dropzone.style.display = 'none';
-}
 </script>
 
 </body>
