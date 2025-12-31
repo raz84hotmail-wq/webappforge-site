@@ -152,12 +152,23 @@ function close(){
 window.WAF_STEP4 = { open };
 
 /* ---------- BOOT ---------- */
-document.addEventListener('DOMContentLoaded', init);
-})();
-// Load STEP 5 controller (no dashboard.html changes)
+// Load STEP 5 controller FIRST (must listen before Step 4 fires events)
 (function(){
   const s = document.createElement('script');
-  s.src = 'waf-step5-controller.js?v=' + Date.now(); // anti-cache
-  s.async = false; // ⬅️ FONDAMENTALE
+  s.src = 'waf-step5-controller.js?v=' + Date.now();
+  s.async = false; // FONDAMENTALE
   document.head.appendChild(s);
+})();
+
+(function(){
+
+/* ---------- STATE ---------- */
+const state = {
+  appType: null,
+  appName: ''
+};
+
+/* ... TUTTO STEP 4 INVARIATO ... */
+
+document.addEventListener('DOMContentLoaded', init);
 })();
