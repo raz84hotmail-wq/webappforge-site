@@ -2,6 +2,7 @@
    WebAppForge – STEP 6
    6.0 Workspace Foundation
    6.1 File Tree / Project Explorer
+   6.2 Code Editor (Base)
    ========================================================= */
 
 (function () {
@@ -19,6 +20,7 @@
   let currentProject = null;
   let filesIndex = [];
   let activeFile = null;
+  let fileContents = {};
 
   /* ---------------------------------------------------------
      HELPERS
@@ -36,7 +38,7 @@
   }
 
   /* ---------------------------------------------------------
-     STYLES (Workspace + File Tree)
+     STYLES
      --------------------------------------------------------- */
   function injectStyles() {
     if ($("#wafStep6Styles")) return;
@@ -107,10 +109,47 @@
         font-weight:700;
         opacity:1;
       }
-      .waf-ft-empty{
-        opacity:.5;
-        font-size:12px;
-        padding:8px;
+
+      /* ===== EDITOR ===== */
+      .waf-editor{
+        position:absolute;
+        top:120px;
+        left:260px;
+        right:0;
+        bottom:0;
+        background:#0B1220;
+        display:flex;
+        flex-direction:column;
+        z-index:4;
+      }
+      .waf-editor-header{
+        height:42px;
+        display:flex;
+        align-items:center;
+        padding:0 14px;
+        border-bottom:1px solid rgba(255,255,255,.08);
+        font-size:13px;
+        gap:10px;
+      }
+      .waf-editor-filename{
+        font-weight:800;
+      }
+      .waf-editor-body{
+        flex:1;
+        padding:0;
+      }
+      .waf-editor-textarea{
+        width:100%;
+        height:100%;
+        background:#0B1220;
+        color:#fff;
+        border:none;
+        outline:none;
+        resize:none;
+        padding:16px;
+        font-family:monospace;
+        font-size:13px;
+        line-height:1.5;
       }
     `;
     document.head.appendChild(style);
@@ -130,7 +169,6 @@
       <div class="waf-workspace-tag">${project.method}</div>
       <div style="opacity:.6;margin-left:auto">Workspace</div>
     `;
-
     document.body.appendChild(bar);
   }
 
@@ -147,50 +185,67 @@
     title.textContent = "Project Files";
     tree.appendChild(title);
 
-    if (!files || !files.length) {
-      const empty = document.createElement("div");
-      empty.className = "waf-ft-empty";
-      empty.textContent = "No files available";
-      tree.appendChild(empty);
-      return tree;
-    }
-
     files.forEach(f => {
       const row = document.createElement("div");
       row.className = "waf-ft-file";
       row.textContent = f.path;
       row.dataset.path = f.path;
-
-      row.onclick = () => setActiveFile(f.path);
-
+      row.onclick = () => openFile(f.path);
       tree.appendChild(row);
     });
 
     return tree;
   }
 
-  function setActiveFile(path) {
+  /* ---------------------------------------------------------
+     EDITOR (6.2)
+     --------------------------------------------------------- */
+  function ensureEditor() {
+    if ($(".waf-editor")) return;
+
+    const editor = document.createElement("div");
+    editor.className = "waf-editor";
+    editor.innerHTML = `
+      <div class="waf-editor-header">
+        <div class="waf-editor-filename">No file selected</div>
+      </div>
+      <div class="waf-editor-body">
+        <textarea class="waf-editor-textarea" disabled></textarea>
+      </div>
+    `;
+    document.body.appendChild(editor);
+  }
+
+  function openFile(path) {
     activeFile = path;
 
-    document
-      .querySelectorAll(".waf-ft-file")
+    document.querySelectorAll(".waf-ft-file")
       .forEach(el => el.classList.remove("active"));
 
-    const el = document.querySelector(
+    const row = document.querySelector(
       `.waf-ft-file[data-path="${CSS.escape(path)}"]`
     );
-    if (el) el.classList.add("active");
+    if (row) row.classList.add("active");
 
-    dispatch(EVT_FILE_SELECTED, {
-      project: currentProject,
-      filePath: path
-    });
+    ensureEditor();
 
-    safeLog("File selected:", path);
+    const title = $(".waf-editor-filename");
+    const textarea = $(".waf-editor-textarea");
+
+    title.textContent = path;
+    textarea.disabled = false;
+    textarea.value = fileContents[path] || "";
+
+    textarea.oninput = () => {
+      fileContents[path] = textarea.value;
+    };
+
+    dispatch(EVT_FILE_SELECTED, { filePath: path });
+    safeLog("Editor opened:", path);
   }
 
   /* ---------------------------------------------------------
-     LOAD FILES FROM INDEXED DB (ZIP PROJECT)
+     LOAD FILES (IndexedDB)
      --------------------------------------------------------- */
   function loadFilesFromIDB(projectId) {
     return new Promise(resolve => {
@@ -203,6 +258,9 @@
         getReq.onsuccess = () => {
           const rec = getReq.result;
           if (!rec || !rec.files) return resolve([]);
+          rec.files.forEach(f => {
+            fileContents[f.path] = f.isBinary ? "" : f.content;
+          });
           resolve(rec.files.map(f => ({ path: f.path })));
         };
       };
@@ -215,14 +273,11 @@
      --------------------------------------------------------- */
   function onProjectRegistered(e) {
     currentProject = e.detail;
-    safeLog("Project loaded:", currentProject);
-
     injectStyles();
-
-    // cleanup precedente
-    $(".waf-file-tree")?.remove();
-
     showWorkspaceBar(currentProject);
+    ensureEditor();
+
+    $(".waf-file-tree")?.remove();
 
     if (currentProject.method === "zip") {
       loadFilesFromIDB(currentProject.id).then(files => {
@@ -231,6 +286,7 @@
       });
     } else {
       filesIndex = [{ path: "index.html" }];
+      fileContents["index.html"] = "";
       document.body.appendChild(buildFileTree(filesIndex));
     }
   }
@@ -240,7 +296,7 @@
      --------------------------------------------------------- */
   function boot() {
     document.addEventListener(EVT_PROJECT_REGISTERED, onProjectRegistered);
-    safeLog("Loaded");
+    safeLog("Loaded (6.0 + 6.1 + 6.2)");
   }
 
   if (document.readyState === "loading") {
