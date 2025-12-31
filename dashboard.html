@@ -101,7 +101,9 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 .ai-body{flex:1;padding:14px;font-size:13px;overflow:auto}
 .ai-body img{
-  max-width:100%;border-radius:12px;margin-top:10px;
+  max-width:100%;
+  border-radius:12px;
+  margin-top:10px;
   border:1px solid rgba(255,255,255,0.15)
 }
 .ai-body pre{
@@ -131,10 +133,8 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <body>
 
-<!-- ROOT: SOLO WebAppForge -->
 <div id="wafRoot">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <img src="logo-header.png" />
     <div class="brand">WebApp<span class="forge">Forge</span></div>
@@ -144,7 +144,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
   <div class="wrap">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h2>Dashboard</h2>
       <div class="card">
@@ -153,13 +152,11 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
       </div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
       <div class="preview">
         <iframe id="previewFrame" src="index.html"></iframe>
       </div>
 
-      <!-- AI -->
       <div class="ai" id="aiBox">
         <div class="ai-header">
           <span class="dot"></span> WebAppForge AI
@@ -217,6 +214,7 @@ function sendMessage(){
   scrollBottom()
 }
 
+/* === UNICA MODIFICA CONSENTITA === */
 async function sendSnapshot(){
   const pre=document.createElement('pre')
   pre.textContent='📸 Screenshot WebAppForge (solo UI interna)'
@@ -229,9 +227,45 @@ async function sendSnapshot(){
     useCORS:true
   })
 
+  const wrapper=document.createElement('div')
+  wrapper.style.position='relative'
+  wrapper.style.borderRadius='12px'
+  wrapper.style.overflow='hidden'
+  wrapper.style.marginTop='10px'
+  wrapper.style.border='1px solid rgba(255,255,255,0.15)'
+
+  const overlay=document.createElement('div')
+  overlay.style.position='absolute'
+  overlay.style.inset='0'
+  overlay.style.background='#0B1220'
+  overlay.style.display='flex'
+  overlay.style.flexDirection='column'
+  overlay.style.alignItems='center'
+  overlay.style.justifyContent='center'
+  overlay.style.zIndex='0'
+
+  const logo=document.createElement('img')
+  logo.src='logo-center.png'
+  logo.style.width='120px'
+  logo.style.marginBottom='12px'
+
+  const text=document.createElement('div')
+  text.innerHTML='<span style="color:#fff;font-weight:800">WebApp</span><span style="color:#1F7CFF;font-weight:800">Forge</span>'
+  text.style.fontSize='28px'
+
+  overlay.appendChild(logo)
+  overlay.appendChild(text)
+
   const img=document.createElement('img')
   img.src=canvas.toDataURL('image/png')
-  chatBody.appendChild(img)
+  img.style.width='100%'
+  img.style.display='block'
+  img.style.position='relative'
+  img.style.zIndex='1'
+
+  wrapper.appendChild(overlay)
+  wrapper.appendChild(img)
+  chatBody.appendChild(wrapper)
   scrollBottom()
 }
 </script>
