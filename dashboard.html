@@ -11,141 +11,65 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
-/* ===== BRAND (IDENTICO AL SITO, SOLO SCALATO) ===== */
-.waf-brand{
-  position:relative;
-  display:inline-block;
-}
-.waf-brand img{
-  width:60px;
-  height:auto;
-  display:block;
-}
-.waf-text{
-  position:absolute;
-  top:29px;
-  left:40px;
-  font-size:18px;
-  font-weight:700;
-  white-space:nowrap;
-}
+/* ===== BRAND ===== */
+.waf-brand{position:relative;display:inline-block}
+.waf-brand img{width:60px;display:block}
+.waf-text{position:absolute;top:29px;left:40px;font-size:18px;font-weight:700}
 .waf-text .forge{color:#1F7CFF}
-.waf-ai{color:#fff;font-weight:700}
+.waf-ai{font-weight:700}
 
 /* TOP BAR */
-.topbar{
-  height:72px;display:flex;align-items:center;
-  padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
-  background:#0B1220
-}
+.topbar{height:72px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.08)}
 .topbar-spacer{flex:1}
-.pill{
-  font-size:12px;padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.10)
-}
+.pill{font-size:12px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
 
 /* LAYOUT */
 .wrap{height:calc(100vh - 72px);display:grid;grid-template-columns:320px 1fr}
 
 /* SIDEBAR */
-.sidebar{
-  border-right:1px solid rgba(255,255,255,0.08);
-  padding:18px;background:rgba(11,18,32,0.65)
-}
-.sidebar h2{
-  font-size:14px;letter-spacing:0.6px;
-  text-transform:uppercase;opacity:0.85;margin-bottom:12px
-}
-.card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;padding:14px;margin-bottom:12px
-}
-.btn{
-  width:100%;padding:12px 14px;border-radius:12px;
-  border:none;cursor:pointer;color:#fff;font-weight:700;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD)
-}
-.btn.secondary{
-  margin-top:10px;background:transparent;
-  border:1px solid rgba(255,255,255,0.16);font-weight:600
-}
+.sidebar{border-right:1px solid rgba(255,255,255,.08);padding:18px}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px}
+.btn{width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;font-weight:700;color:#fff;background:linear-gradient(90deg,#1F7CFF,#E056FD)}
+.btn.secondary{background:transparent;border:1px solid rgba(255,255,255,.16);margin-top:10px}
 
 /* MAIN */
-.main{
-  padding:18px;position:relative;
-  background:
-    radial-gradient(circle at top, rgba(224,86,253,0.10), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(31,124,255,0.12), transparent 55%),
-    #0B1220
-}
-.preview{
-  height:100%;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.03)
-}
-.preview iframe{width:100%;height:100%;border:0;background:#fff}
+.main{padding:18px;position:relative}
+.preview{height:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.preview iframe{width:100%;height:100%;border:0}
 
-/* AI CHAT */
-.ai{
-  position:absolute;right:22px;bottom:22px;
-  width:360px;height:460px;
-  border-radius:18px;border:1px solid rgba(255,255,255,0.14);
-  background:rgba(10,16,30,0.92);
-  box-shadow:0 18px 60px rgba(0,0,0,0.35);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-}
+/* AI */
+.ai{position:absolute;right:22px;bottom:22px;width:360px;height:460px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(10,16,30,.92);display:flex;flex-direction:column}
 .ai.collapsed{height:52px}
-.ai.collapsed .ai-body,
-.ai.collapsed .ai-input{display:none}
-.ai.collapsed .ai-header{
-  height:52px;
-  align-items:center;
-}
-.ai-header{
-  padding:4px 14px;
-  background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
-  border-bottom:1px solid rgba(255,255,255,0.10);
-  display:flex;align-items:center;
-  border-top-left-radius:18px;
-  border-top-right-radius:18px;
-}
-  .ai.collapsed .ai-header{
-  border-bottom:none;
-}
+.ai.collapsed .ai-body,.ai.collapsed .ai-input{display:none}
+.ai-header{padding:4px 14px;display:flex;align-items:center;background:linear-gradient(90deg,rgba(31,124,255,.22),rgba(224,86,253,.18))}
 .ai-spacer{flex:1}
-.ai-toggle{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  color:#fff;border-radius:8px;
-  padding:4px 8px;cursor:pointer
-}
-
+.ai-toggle{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:8px;padding:4px 8px;cursor:pointer}
 .ai-body{flex:1;padding:14px;font-size:13px;overflow:auto}
-.ai-input{
-  padding:10px;border-top:1px solid rgba(255,255,255,0.10);
-  display:flex;gap:8px;align-items:center
-}
-.ai-input input{
-  flex:1;border-radius:12px;border:1px solid rgba(255,255,255,0.14);
-  background:rgba(255,255,255,0.06);color:#fff;padding:10px 12px
-}
-.icon-btn{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:10px;padding:8px 10px;
-  cursor:pointer;color:#fff
-}
-.icon-btn input{display:none}
+.ai-input{padding:10px;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:8px}
+.ai-input input{flex:1;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;padding:10px}
+.icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px 10px;cursor:pointer;color:#fff}
+
+/* ===== MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:999}
+.modal{width:520px;background:#0B1220;border-radius:18px;border:1px solid rgba(255,255,255,.12);padding:22px}
+.modal h3{margin-bottom:10px}
+.modal p{opacity:.85;margin-bottom:14px}
+.modal input{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;margin-bottom:14px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* ===== STEP 4.1 – APP TYPE ===== */
+.app-types{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px}
+.app-type{padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s}
+.app-type:hover{border-color:#1F7CFF}
+.app-type.active{background:linear-gradient(90deg,rgba(31,124,255,.25),rgba(224,86,253,.25));border-color:#E056FD}
+.app-type h4{margin-bottom:6px}
+.app-type p{font-size:12px;opacity:.8}
 </style>
 </head>
 
 <body>
 
 <div id="wafRoot">
-
   <div class="topbar">
     <div class="waf-brand">
       <img src="logo-header.png">
@@ -156,19 +80,15 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   </div>
 
   <div class="wrap">
-
     <aside class="sidebar">
-      <h2>Dashboard</h2>
       <div class="card">
-        <button class="btn">Create App</button>
+        <button class="btn" onclick="openCreateApp()">Create App</button>
         <button class="btn secondary">Import Project (soon)</button>
       </div>
     </aside>
 
     <main class="main">
-      <div class="preview">
-        <iframe src="index.html"></iframe>
-      </div>
+      <div class="preview"><iframe src="index.html"></iframe></div>
 
       <div class="ai" id="aiBox">
         <div class="ai-header">
@@ -181,74 +101,78 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
           <div class="ai-spacer"></div>
           <button class="ai-toggle" onclick="toggleAI()">🟣</button>
         </div>
-
-        <div class="ai-body" id="chatBody">
-          Premi 📸 per inviare lo stato completo di WebAppForge.
-        </div>
-
+        <div class="ai-body" id="chatBody"></div>
         <div class="ai-input">
-          <label class="icon-btn">📎
-            <input type="file" onchange="sendFile(this.files[0])">
-          </label>
           <button class="icon-btn" onclick="sendSnapshot()">📸</button>
           <input id="msgInput" placeholder="Ask WebAppForge..." />
           <button class="icon-btn" onclick="sendMessage()">➤</button>
         </div>
       </div>
-
     </main>
   </div>
 </div>
 
-<script>
-const aiBox = document.getElementById('aiBox')
-const chatBody = document.getElementById('chatBody')
-const wafRoot = document.getElementById('wafRoot')
-const msgInput = document.getElementById('msgInput')
+<!-- STEP 4 MODAL -->
+<div class="modal-overlay" id="createAppModal">
+  <div class="modal">
+    <h3>Create your App</h3>
+    <p>Select app type</p>
 
-function toggleAI(){
-  aiBox.classList.toggle('collapsed')
+    <div class="app-types">
+      <div class="app-type" onclick="selectAppType('web')"><h4>🌐 Web</h4><p>Standard Web App</p></div>
+      <div class="app-type" onclick="selectAppType('pwa')"><h4>📲 PWA</h4><p>Installable</p></div>
+      <div class="app-type" onclick="selectAppType('ios')"><h4>🍎 iOS</h4><p>App Store</p></div>
+      <div class="app-type" onclick="selectAppType('android')"><h4>🤖 Android</h4><p>Google Play</p></div>
+    </div>
+
+    <input id="appNameInput" placeholder="App name">
+
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeCreateApp()">Cancel</button>
+      <button class="btn" onclick="confirmCreateApp()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedAppType=null
+const aiBox=document.getElementById('aiBox')
+const chatBody=document.getElementById('chatBody')
+const wafRoot=document.getElementById('wafRoot')
+const msgInput=document.getElementById('msgInput')
+
+function toggleAI(){aiBox.classList.toggle('collapsed')}
+function openCreateApp(){createAppModal.style.display='flex'}
+function closeCreateApp(){createAppModal.style.display='none'}
+
+function selectAppType(type){
+  selectedAppType=type
+  document.querySelectorAll('.app-type').forEach(e=>e.classList.remove('active'))
+  event.currentTarget.classList.add('active')
 }
 
-function sendFile(file){
-  if(!file) return
-  const d=document.createElement('div')
-  d.textContent='📎 '+file.name
-  chatBody.appendChild(d)
-  chatBody.scrollTop=chatBody.scrollHeight
+function confirmCreateApp(){
+  const name=appNameInput.value.trim()
+  if(!name||!selectedAppType){alert('Missing data');return}
+  console.log('NEW APP:',name,selectedAppType)
+  closeCreateApp()
 }
 
 function sendMessage(){
-  const t=msgInput.value.trim()
-  if(!t) return
+  if(!msgInput.value.trim())return
   const d=document.createElement('div')
-  d.textContent='🗨️ '+t
+  d.textContent=msgInput.value
   chatBody.appendChild(d)
   msgInput.value=''
-  chatBody.scrollTop=chatBody.scrollHeight
 }
-
 function sendSnapshot(){
-  html2canvas(wafRoot,{
-    backgroundColor:null,
-    scale:window.devicePixelRatio || 1,
-    useCORS:true
-  }).then(canvas=>{
-    const img=document.createElement('img')
-    img.src=canvas.toDataURL('image/png')
-    img.style.maxWidth='100%'
-    img.style.borderRadius='12px'
-    img.style.marginTop='8px'
-    chatBody.appendChild(img)
-    chatBody.scrollTop=chatBody.scrollHeight
+  html2canvas(wafRoot).then(c=>{
+    const i=document.createElement('img')
+    i.src=c.toDataURL()
+    i.style.maxWidth='100%'
+    chatBody.appendChild(i)
   })
 }
-  msgInput.addEventListener('keydown', function(e){
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    sendMessage();
-  }
-});
 </script>
 
 </body>
