@@ -1,173 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>WebAppForge – Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>WebAppForge Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0B1220;
-      color: #fff;
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    header {
-      background: #0B1220;
-      padding: 16px;
-      border-bottom: 1px solid #1F7CFF;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: #0B1220;
+  color: #fff;
+  display: flex;
+  height: 100vh;
+}
 
-    header img {
-      height: 32px;
-    }
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: #0B1220;
+  border-right: 1px solid #1F7CFF33;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    header h1 {
-      font-size: 18px;
-      margin: 0;
-    }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
 
-    main {
-      padding: 20px;
-    }
+.logo img {
+  width: 36px;
+  height: 36px;
+}
 
-    .card {
-      background: #111A2E;
-      border: 1px solid #1F7CFF;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
+.logo span {
+  font-size: 20px;
+  font-weight: 700;
+}
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 16px;
-    }
+.sidebar button {
+  width: 100%;
+  background: linear-gradient(135deg, #1F7CFF, #E056FD);
+  border: none;
+  padding: 12px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
 
-    button {
-      background: #1F7CFF;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow: auto;
+}
 
-    button:hover {
-      background: #3A8DFF;
-    }
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      border: none;
-    }
+.project-card {
+  background: #111a2e;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  border: 1px solid #1F7CFF33;
+}
 
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: 1px solid #1F7CFF;
-      border-radius: 8px;
-      background: white;
-    }
+.project-card h3 {
+  margin: 0 0 10px;
+}
 
-    .status {
-      font-size: 14px;
-      color: #aaa;
-    }
-  </style>
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #0B1220;
+  padding: 25px;
+  width: 400px;
+  border-radius: 12px;
+  border: 1px solid #1F7CFF55;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: none;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1F7CFF, #E056FD);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* PREVIEW */
+.preview {
+  margin-top: 30px;
+}
+
+iframe {
+  width: 100%;
+  height: 500px;
+  border-radius: 12px;
+  border: 1px solid #1F7CFF33;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  <img src="logo-header.png" alt="WebAppForge">
-  <h1>WebAppForge – Dashboard</h1>
-</header>
+<div class="sidebar">
+  <div class="logo">
+    <img src="logo-header.png" />
+    <span>WebAppForge</span>
+  </div>
 
-<main>
+  <button onclick="openModal()">➕ Create App</button>
+</div>
 
-  <!-- CREATE APP -->
-  <div class="card">
+<div class="main">
+  <h1>Your Projects</h1>
+  <div class="projects" id="projects"></div>
+
+  <div class="preview" id="preview"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
     <h2>Create App</h2>
-    <p class="status">Import a project from GitHub</p>
-
-    <input
-      type="text"
-      id="githubUrl"
-      placeholder="https://github.com/username/repository"
-    />
-
-    <button onclick="importFromGithub()">Import from GitHub</button>
-    <p id="githubStatus" class="status"></p>
+    <input id="appName" placeholder="App name" />
+    <input type="file" id="zipInput" accept=".zip" />
+    <button onclick="createApp()">Create</button>
   </div>
-
-  <!-- PREVIEW -->
-  <div class="card">
-    <h2>Live Preview</h2>
-    <iframe id="preview"></iframe>
-  </div>
-
-</main>
+</div>
 
 <script>
-  async function importFromGithub() {
-    const url = document.getElementById('githubUrl').value.trim();
-    const status = document.getElementById('githubStatus');
+let projects = JSON.parse(localStorage.getItem("projects") || "[]");
 
-    if (!url.startsWith('https://github.com/')) {
-      status.textContent = 'Invalid GitHub URL';
-      return;
-    }
+function renderProjects() {
+  const container = document.getElementById("projects");
+  container.innerHTML = "";
+  projects.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "project-card";
+    div.innerHTML = `<h3>${p.name}</h3><p>${p.files.length} files</p>`;
+    div.onclick = () => openPreview(p);
+    container.appendChild(div);
+  });
+}
 
-    status.textContent = 'Fetching repository…';
+function openModal() {
+  document.getElementById("modal").style.display = "flex";
+}
 
-    try {
-      const apiUrl = url
-        .replace('https://github.com/', 'https://api.github.com/repos/')
-        .replace(/\/$/, '');
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
 
-      const res = await fetch(apiUrl);
-      const data = await res.json();
+async function createApp() {
+  const name = document.getElementById("appName").value;
+  const file = document.getElementById("zipInput").files[0];
+  if (!name || !file) return alert("Missing data");
 
-      if (!data.contents_url) {
-        status.textContent = 'Repository not accessible';
-        return;
-      }
+  const zip = await JSZip.loadAsync(file);
+  let files = [];
 
-      const contentsUrl = data.contents_url.replace('{+path}', '');
-      const contentsRes = await fetch(contentsUrl);
-      const files = await contentsRes.json();
-
-      const indexFile = files.find(f => f.name === 'index.html');
-
-      if (!indexFile) {
-        status.textContent = 'index.html not found in repo';
-        return;
-      }
-
-      const fileRes = await fetch(indexFile.download_url);
-      const html = await fileRes.text();
-
-      const blob = new Blob([html], { type: 'text/html' });
-      const previewUrl = URL.createObjectURL(blob);
-
-      document.getElementById('preview').src = previewUrl;
-      status.textContent = 'GitHub project loaded successfully';
-
-    } catch (e) {
-      console.error(e);
-      status.textContent = 'Error importing repository';
-    }
+  for (let filename in zip.files) {
+    const content = await zip.files[filename].async("string");
+    files.push({ name: filename, content });
   }
+
+  projects.push({ name, files });
+  localStorage.setItem("projects", JSON.stringify(projects));
+  closeModal();
+  renderProjects();
+}
+
+function openPreview(project) {
+  const index = project.files.find(f => f.name.toLowerCase().includes("index.html"));
+  if (!index) return alert("index.html not found");
+
+  const iframe = `<iframe srcdoc="${index.content.replace(/"/g, '&quot;')}"></iframe>`;
+  document.getElementById("preview").innerHTML = iframe;
+}
+
+renderProjects();
 </script>
 
 </body>
