@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WebAppForge Dashboard</title>
 
+<!-- Screenshot engine -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
@@ -63,51 +64,11 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
     #0B1220
 }
 .preview{
-  position:relative;
-  height:100%;
-  border-radius:16px;
-  overflow:hidden;
+  height:100%;border-radius:16px;overflow:hidden;
   border:1px solid rgba(255,255,255,0.10);
-  background:#0B1220
+  background:rgba(255,255,255,0.03)
 }
-.preview iframe{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  border:0;
-  opacity:0.15;              /* 👈 preview resta “fantasma” */
-  pointer-events:none;       /* 👈 non interferisce */
-}
-
-/* OVERLAY BRAND (al posto del bianco) */
-.preview-overlay{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
-  background:
-    radial-gradient(circle at top, rgba(224,86,253,0.12), transparent 60%),
-    radial-gradient(circle at bottom left, rgba(31,124,255,0.15), transparent 60%),
-    #0B1220;
-  z-index:2;
-}
-.preview-overlay .logo{
-  font-size:72px;
-  font-weight:900;
-  background:linear-gradient(180deg,#1F7CFF,#E056FD);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.preview-overlay .name{
-  font-size:26px;
-  font-weight:800;
-  letter-spacing:0.5px;
-  opacity:0.95;
-}
+.preview iframe{width:100%;height:100%;border:0;background:#fff}
 
 /* AI CHAT */
 .ai{
@@ -117,10 +78,16 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   background:rgba(10,16,30,0.92);
   box-shadow:0 18px 60px rgba(0,0,0,0.35);
   display:flex;flex-direction:column;
+  transition:height .25s ease;
 }
+.ai.collapsed{height:52px}
+.ai.collapsed .ai-body,
+.ai.collapsed .ai-input{display:none}
+
 .ai-header{
   padding:12px 14px;font-weight:800;font-size:13px;
   background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
+  border-bottom:1px solid rgba(255,255,255,0.10);
   display:flex;align-items:center;gap:10px
 }
 .dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(180deg,#1F7CFF,#E056FD)}
@@ -131,11 +98,10 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   color:#fff;border-radius:8px;
   padding:4px 8px;cursor:pointer
 }
+
 .ai-body{flex:1;padding:14px;font-size:13px;overflow:auto}
 .ai-body img{
-  max-width:100%;
-  border-radius:12px;
-  margin-top:10px;
+  max-width:100%;border-radius:12px;margin-top:10px;
   border:1px solid rgba(255,255,255,0.15)
 }
 .ai-body pre{
@@ -144,6 +110,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   border:1px solid rgba(255,255,255,0.12);
   padding:10px;border-radius:12px;margin-top:10px
 }
+
 .ai-input{
   padding:10px;border-top:1px solid rgba(255,255,255,0.10);
   display:flex;gap:8px;align-items:center
@@ -164,8 +131,10 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <body>
 
+<!-- ROOT: SOLO WebAppForge -->
 <div id="wafRoot">
 
+  <!-- TOP BAR -->
   <div class="topbar">
     <img src="logo-header.png" />
     <div class="brand">WebApp<span class="forge">Forge</span></div>
@@ -175,6 +144,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
   <div class="wrap">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h2>Dashboard</h2>
       <div class="card">
@@ -183,17 +153,13 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
       </div>
     </aside>
 
+    <!-- MAIN -->
     <main class="main">
       <div class="preview">
-        <iframe src="index.html"></iframe>
-
-        <!-- BRAND PLACEHOLDER -->
-        <div class="preview-overlay">
-          <div class="logo">F</div>
-          <div class="name">WebAppForge</div>
-        </div>
+        <iframe id="previewFrame" src="index.html"></iframe>
       </div>
 
+      <!-- AI -->
       <div class="ai" id="aiBox">
         <div class="ai-header">
           <span class="dot"></span> WebAppForge AI
@@ -221,13 +187,16 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
 <script>
 const wafRoot  = document.getElementById('wafRoot')
+const aiBox    = document.getElementById('aiBox')
 const chatBody = document.getElementById('chatBody')
 const msgInput = document.getElementById('msgInput')
 
 function scrollBottom(){ chatBody.scrollTop = chatBody.scrollHeight }
 
 function toggleAI(){
-  document.getElementById('aiBox').classList.toggle('collapsed')
+  aiBox.classList.toggle('collapsed')
+  document.querySelector('.ai-toggle').textContent =
+    aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
 }
 
 function sendFile(file){
@@ -250,7 +219,7 @@ function sendMessage(){
 
 async function sendSnapshot(){
   const pre=document.createElement('pre')
-  pre.textContent='📸 Screenshot WebAppForge (UI interna)'
+  pre.textContent='📸 Screenshot WebAppForge (solo UI interna)'
   chatBody.appendChild(pre)
   scrollBottom()
 
