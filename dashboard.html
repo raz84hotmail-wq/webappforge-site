@@ -1,223 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>WebAppForge Dashboard</title>
 
+<!-- html2canvas (Safari OK) -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+  body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
-/* TOP BAR */
-.topbar{
-  height:72px;display:flex;align-items:center;gap:12px;
-  padding:0 18px;border-bottom:1px solid rgba(255,255,255,.08);
-}
-.topbar img{height:40px}
-.brand{font-size:20px;font-weight:800}
-.brand .forge{color:#1F7CFF}
-.topbar-spacer{flex:1}
-.pill{
-  font-size:12px;padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12)
-}
+  /* TOP BAR */
+  .topbar{
+    height:72px;display:flex;align-items:center;gap:12px;
+    padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);
+    background:#0B1220
+  }
+  .topbar img{height:40px}
+  .brand{font-size:20px;font-weight:800}
+  .brand .forge{color:#1F7CFF}
+  .topbar-spacer{flex:1}
+  .pill{
+    font-size:12px;padding:8px 12px;border-radius:999px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.10)
+  }
 
-/* LAYOUT */
-.wrap{height:calc(100vh - 72px);display:grid;grid-template-columns:320px 1fr}
+  /* LAYOUT */
+  .wrap{height:calc(100vh - 72px);display:grid;grid-template-columns:320px 1fr}
 
-/* SIDEBAR */
-.sidebar{
-  padding:18px;border-right:1px solid rgba(255,255,255,.08);
-}
-.card{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;padding:14px;margin-bottom:14px
-}
-.btn{
-  width:100%;padding:12px;border-radius:12px;
-  border:none;cursor:pointer;font-weight:700;color:#fff;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD)
-}
-.btn.secondary{
-  margin-top:10px;background:transparent;
-  border:1px solid rgba(255,255,255,.2)
-}
+  /* SIDEBAR */
+  .sidebar{
+    border-right:1px solid rgba(255,255,255,0.08);
+    padding:18px;background:rgba(11,18,32,0.65)
+  }
+  .sidebar h2{
+    font-size:14px;letter-spacing:0.6px;
+    text-transform:uppercase;opacity:0.85;margin-bottom:12px
+  }
+  .card{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:14px;padding:14px;margin-bottom:12px
+  }
+  .btn{
+    width:100%;padding:12px 14px;border-radius:12px;
+    border:none;cursor:pointer;color:#fff;font-weight:700;
+    background:linear-gradient(90deg,#1F7CFF,#E056FD)
+  }
+  .btn.secondary{
+    margin-top:10px;background:transparent;
+    border:1px solid rgba(255,255,255,0.16);font-weight:600
+  }
 
-/* MAIN */
-.main{
-  position:relative;padding:18px;
-  background:
-    radial-gradient(circle at top, rgba(224,86,253,.1), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(31,124,255,.12), transparent 55%);
-}
-.preview{
-  height:100%;border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,.12)
-}
-.preview iframe{width:100%;height:100%;border:0;background:#fff}
+  /* MAIN */
+  .main{
+    padding:18px;position:relative;
+    background:
+      radial-gradient(circle at top, rgba(224,86,253,0.10), transparent 55%),
+      radial-gradient(circle at bottom left, rgba(31,124,255,0.12), transparent 55%),
+      #0B1220
+  }
+  .preview{
+    height:100%;border-radius:16px;overflow:hidden;
+    border:1px solid rgba(255,255,255,0.10);
+    background:rgba(255,255,255,0.03)
+  }
+  .preview iframe{width:100%;height:100%;border:0;background:#fff}
 
-/* AI CHAT */
-.ai{
-  position:absolute;right:22px;bottom:22px;
-  width:360px;height:440px;
-  background:rgba(10,16,30,.92);
-  border-radius:18px;border:1px solid rgba(255,255,255,.18);
-  display:flex;flex-direction:column;
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
-  transition:height .25s ease;
-}
-.ai.collapsed{height:52px}
-.ai.collapsed .ai-body,
-.ai.collapsed .ai-input{display:none}
+  /* AI CHAT */
+  .ai{
+    position:absolute;right:22px;bottom:22px;width:360px;height:460px;
+    border-radius:18px;border:1px solid rgba(255,255,255,0.14);
+    background:rgba(10,16,30,0.92);
+    box-shadow:0 18px 60px rgba(0,0,0,0.35);
+    display:flex;flex-direction:column;
+    transition:height .25s ease;
+  }
+  .ai.collapsed{height:52px}
+  .ai.collapsed .ai-body,
+  .ai.collapsed .ai-input{display:none}
 
-.ai-header{
-  padding:12px 14px;
-  background:linear-gradient(90deg,rgba(31,124,255,.25),rgba(224,86,253,.25));
-  display:flex;align-items:center;gap:10px;
-  font-weight:800;font-size:13px
-}
-.dot{
-  width:10px;height:10px;border-radius:50%;
-  background:linear-gradient(180deg,#1F7CFF,#E056FD)
-}
-.ai-spacer{flex:1}
-.ai-toggle{
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.2);
-  color:#fff;border-radius:8px;
-  padding:4px 8px;cursor:pointer
-}
+  .ai-header{
+    padding:12px 14px;font-weight:800;font-size:13px;
+    background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
+    border-bottom:1px solid rgba(255,255,255,0.10);
+    display:flex;align-items:center;gap:10px
+  }
+  .dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(180deg,#1F7CFF,#E056FD)}
+  .ai-spacer{flex:1}
+  .ai-toggle{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    color:#fff;border-radius:8px;
+    padding:4px 8px;cursor:pointer
+  }
 
-.ai-body{
-  flex:1;padding:14px;font-size:13px;
-  overflow:auto;line-height:1.4
-}
-.ai-body img{
-  max-width:100%;border-radius:12px;margin-top:8px;
-  border:1px solid rgba(255,255,255,.18)
-}
+  .ai-body{flex:1;padding:14px;font-size:13px;opacity:0.95;overflow:auto}
+  .ai-body pre{
+    white-space:pre-wrap;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    padding:10px;border-radius:12px;margin-top:10px
+  }
+  .ai-body img{
+    max-width:100%;
+    border-radius:12px;margin-top:10px;
+    border:1px solid rgba(255,255,255,0.15)
+  }
 
-.ai-input{
-  padding:10px;border-top:1px solid rgba(255,255,255,.12);
-  display:flex;gap:8px;align-items:center
-}
-.ai-input input{
-  flex:1;padding:10px 12px;border-radius:12px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.18);
-  color:#fff
-}
-.ai-input button{
-  padding:10px 14px;border-radius:12px;
-  border:none;font-weight:800;cursor:pointer;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD);
-  color:#fff
-}
-.icon-btn{
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:10px;padding:8px;cursor:pointer
-}
-.icon-btn input{display:none}
+  .ai-input{
+    padding:10px;border-top:1px solid rgba(255,255,255,0.10);
+    display:flex;gap:8px;align-items:center
+  }
+  .ai-input input{
+    flex:1;border-radius:12px;border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.06);color:#fff;padding:10px 12px
+  }
+  .icon-btn{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:10px;padding:8px 10px;cursor:pointer;color:#fff;
+    display:inline-flex;align-items:center;justify-content:center
+  }
+  .icon-btn[disabled]{opacity:0.55;cursor:not-allowed}
+  .icon-btn input{display:none}
+
+  .hint{
+    font-size:12px;opacity:0.85;margin-top:8px;line-height:1.35
+  }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <img src="logo-header.png">
-  <div class="brand">WebApp<span class="forge">Forge</span></div>
-  <div class="topbar-spacer"></div>
-  <div class="pill">Web-first • PWA Ready</div>
-</div>
+<!-- Root container to screenshot ONLY WebAppForge -->
+<div id="wafRoot">
 
-<div class="wrap">
-
-<aside class="sidebar">
-  <div class="card">
-    <button class="btn">Create App</button>
-    <button class="btn secondary">Import Project (soon)</button>
-  </div>
-</aside>
-
-<main class="main">
-  <div class="preview">
-    <iframe src="index.html"></iframe>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <img src="logo-header.png" />
+    <div class="brand">WebApp<span class="forge">Forge</span></div>
+    <div class="topbar-spacer"></div>
+    <div class="pill">Web-first • PWA Ready</div>
   </div>
 
-  <div class="ai" id="aiBox">
-    <div class="ai-header">
-      <span class="dot"></span> WebAppForge AI
-      <div class="ai-spacer"></div>
-      <button class="ai-toggle" onclick="toggleAI()">⬇️</button>
-    </div>
+  <div class="wrap">
 
-    <div class="ai-body" id="chatBody">
-      🧠 <b>Context ready.</b><br>
-      Premi 📸 per inviare lo stato completo alla AI.
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h2>Dashboard</h2>
 
-    <div class="ai-input">
-      <label class="icon-btn">📎
-        <input type="file" onchange="sendFile(this.files[0])">
-      </label>
+      <div class="card">
+        <button class="btn">Create App</button>
+        <button class="btn secondary">Import Project (soon)</button>
+      </div>
 
-      <button class="icon-btn" onclick="sendContext()">📸</button>
+      <div class="hint">
+        📸 invia “quello che vedi” ad ALL (solo dentro WebAppForge).
+      </div>
+    </aside>
 
-      <input placeholder="Ask WebAppForge...">
-      <button>Send</button>
-    </div>
+    <!-- MAIN -->
+    <main class="main">
+      <div class="preview">
+        <!-- IMPORTANT: preview is same-origin (index.html) to capture it -->
+        <iframe id="previewFrame" src="index.html"></iframe>
+      </div>
+
+      <!-- AI CHAT -->
+      <div class="ai" id="aiBox">
+        <div class="ai-header">
+          <span class="dot"></span>
+          WebAppForge AI
+          <div class="ai-spacer"></div>
+          <button class="ai-toggle" onclick="toggleAI()">⬇️</button>
+        </div>
+
+        <div class="ai-body" id="chatBody">
+          Premi 📸 per inviare lo stato completo (UI + contesto).
+          <div class="hint">
+            ✅ ALL vede solo WebAppForge.<br>
+            ❌ Nessuna cattura di app esterne / desktop.
+          </div>
+        </div>
+
+        <div class="ai-input">
+          <label class="icon-btn" title="Upload file">
+            📎
+            <input type="file" onchange="sendFile(this.files[0])">
+          </label>
+
+          <button id="snapBtn" class="icon-btn" onclick="sendSnapshot()" title="Screenshot WebAppForge">📸</button>
+
+          <input id="msgInput" placeholder="Ask WebAppForge..." />
+          <button class="icon-btn" onclick="sendMessage()" title="Send">➤</button>
+        </div>
+      </div>
+    </main>
+
   </div>
-</main>
-
 </div>
 
 <script>
-const chatBody = document.getElementById('chatBody')
-const aiBox = document.getElementById('aiBox')
+document.addEventListener('DOMContentLoaded', () => {
 
-function toggleAI(){
-  aiBox.classList.toggle('collapsed')
-  document.querySelector('.ai-toggle').textContent =
-    aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
-}
+  const wafRoot   = document.getElementById('wafRoot')
+  const aiBox     = document.getElementById('aiBox')
+  const chatBody  = document.getElementById('chatBody')
+  const snapBtn   = document.getElementById('snapBtn')
+  const msgInput  = document.getElementById('msgInput')
+  const iframe    = document.getElementById('previewFrame')
 
-function sendFile(file){
-  if(!file) return
-  const d=document.createElement('div')
-  d.textContent='📎 '+file.name
-  chatBody.appendChild(d)
-  chatBody.scrollTop=chatBody.scrollHeight
-}
+  function scrollChatBottom(){
+    chatBody.scrollTop = chatBody.scrollHeight
+  }
 
-function getContext(){
-  return `
-📄 Page: dashboard.html
-🖼 Preview: index.html
-📐 Viewport: ${window.innerWidth}x${window.innerHeight}
-🧩 Components: sidebar, preview, ai-chat
-📍 Chat: ${aiBox.classList.contains('collapsed')?'collapsed':'open'}
-`
-}
+  window.toggleAI = function(){
+    aiBox.classList.toggle('collapsed')
+    document.querySelector('.ai-toggle').textContent =
+      aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
+  }
 
-function sendContext(){
-  const ctx=document.createElement('pre')
-  ctx.textContent=getContext()
-  chatBody.appendChild(ctx)
+  window.sendFile = function(file){
+    if(!file) return
+    const el = document.createElement('div')
+    el.textContent = '📎 ' + file.name
+    chatBody.appendChild(el)
+    scrollChatBottom()
+  }
 
-  html2canvas(document.querySelector('.main')).then(canvas=>{
-    const img=document.createElement('img')
-    img.src=canvas.toDataURL('image/png')
-    chatBody.appendChild(img)
-    chatBody.scrollTop=chatBody.scrollHeight
-  })
-}
-</script>
+  window.sendMessage = function(){
+    const txt = (msgInput.value || '').trim()
+    if(!txt) return
+    const el = document.createElement('div')
+    el.textContent = '🗨️ ' + txt
+    chatBody.appendChild(el)
+    msgInput.value = ''
+    scrollChatBottom()
+  }
 
-</body>
-</html>
+  function getContext(){
+    return {
+      page: "dashboard.html",
+      preview: iframe?.getAttribute('src') || null,
+      viewport: { w: window.innerWidth, h: window.innerHeight },
+      components: {
+        topbar: true,
+        sidebar: true,
+        preview: true,
+        aiChat: true
+      },
+      chat: aiBox.classList.contains('collapsed') ? 'collapsed' : 'open',
+      ts: new Date().toISOString()
+    }
+  }
+
+  async function captureIframeIfPossible(){
+    // Capture the iframe content only if same-origin and loaded.
