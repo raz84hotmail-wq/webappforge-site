@@ -70,6 +70,31 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 }
 .preview iframe{width:100%;height:100%;border:0;background:#fff}
 
+/* 🔥 PLACEHOLDER SCREENSHOT (AGGIUNTO) */
+#previewPlaceholder{
+  position:absolute;
+  inset:18px;
+  border-radius:16px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:18px;
+  background:
+    radial-gradient(circle at top, rgba(224,86,253,0.15), transparent 55%),
+    radial-gradient(circle at bottom left, rgba(31,124,255,0.18), transparent 55%),
+    #0B1220;
+  border:1px solid rgba(255,255,255,0.12);
+  z-index:5;
+}
+#previewPlaceholder img{
+  width:140px;
+}
+#previewPlaceholder .title{
+  font-size:28px;
+  font-weight:800;
+}
+
 /* AI CHAT */
 .ai{
   position:absolute;right:22px;bottom:22px;
@@ -78,12 +103,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   background:rgba(10,16,30,0.92);
   box-shadow:0 18px 60px rgba(0,0,0,0.35);
   display:flex;flex-direction:column;
-  transition:height .25s ease;
 }
-.ai.collapsed{height:52px}
-.ai.collapsed .ai-body,
-.ai.collapsed .ai-input{display:none}
-
 .ai-header{
   padding:12px 14px;font-weight:800;font-size:13px;
   background:linear-gradient(90deg, rgba(31,124,255,0.22), rgba(224,86,253,0.18));
@@ -91,50 +111,21 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   display:flex;align-items:center;gap:10px
 }
 .dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(180deg,#1F7CFF,#E056FD)}
-.ai-spacer{flex:1}
-.ai-toggle{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  color:#fff;border-radius:8px;
-  padding:4px 8px;cursor:pointer
-}
-
 .ai-body{flex:1;padding:14px;font-size:13px;overflow:auto}
-.ai-body img{
-  max-width:100%;border-radius:12px;margin-top:10px;
-  border:1px solid rgba(255,255,255,0.15)
-}
-.ai-body pre{
-  white-space:pre-wrap;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.12);
-  padding:10px;border-radius:12px;margin-top:10px
-}
-
+.ai-body img{max-width:100%;border-radius:12px;margin-top:10px}
 .ai-input{
   padding:10px;border-top:1px solid rgba(255,255,255,0.10);
-  display:flex;gap:8px;align-items:center
+  display:flex;gap:8px
 }
-.ai-input input{
-  flex:1;border-radius:12px;border:1px solid rgba(255,255,255,0.14);
-  background:rgba(255,255,255,0.06);color:#fff;padding:10px 12px
-}
-.icon-btn{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:10px;padding:8px 10px;
-  cursor:pointer;color:#fff
-}
-.icon-btn input{display:none}
+.ai-input input{flex:1;border-radius:12px;padding:10px}
+.icon-btn{cursor:pointer}
 </style>
 </head>
 
 <body>
 
-<!-- ROOT: SOLO WebAppForge -->
 <div id="wafRoot">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <img src="logo-header.png" />
     <div class="brand">WebApp<span class="forge">Forge</span></div>
@@ -144,7 +135,6 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 
   <div class="wrap">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h2>Dashboard</h2>
       <div class="card">
@@ -153,31 +143,27 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
       </div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
       <div class="preview">
-        <iframe id="previewFrame" src="index.html"></iframe>
+        <iframe src="index.html"></iframe>
       </div>
 
-      <!-- AI -->
-      <div class="ai" id="aiBox">
+      <!-- PLACEHOLDER -->
+      <div id="previewPlaceholder">
+        <img src="logo-center.png">
+        <div class="title">WebAppForge</div>
+      </div>
+
+      <div class="ai">
         <div class="ai-header">
           <span class="dot"></span> WebAppForge AI
-          <div class="ai-spacer"></div>
-          <button class="ai-toggle" onclick="toggleAI()">⬇️</button>
         </div>
-
         <div class="ai-body" id="chatBody">
           Premi 📸 per inviare lo stato completo di WebAppForge.
         </div>
-
         <div class="ai-input">
-          <label class="icon-btn">📎
-            <input type="file" onchange="sendFile(this.files[0])">
-          </label>
           <button class="icon-btn" onclick="sendSnapshot()">📸</button>
-          <input id="msgInput" placeholder="Ask WebAppForge..." />
-          <button class="icon-btn" onclick="sendMessage()">➤</button>
+          <input placeholder="Ask WebAppForge..." />
         </div>
       </div>
     </main>
@@ -186,53 +172,25 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
 </div>
 
 <script>
-const wafRoot  = document.getElementById('wafRoot')
-const aiBox    = document.getElementById('aiBox')
+const wafRoot = document.getElementById('wafRoot')
 const chatBody = document.getElementById('chatBody')
-const msgInput = document.getElementById('msgInput')
-
-function scrollBottom(){ chatBody.scrollTop = chatBody.scrollHeight }
-
-function toggleAI(){
-  aiBox.classList.toggle('collapsed')
-  document.querySelector('.ai-toggle').textContent =
-    aiBox.classList.contains('collapsed') ? '⬆️' : '⬇️'
-}
-
-function sendFile(file){
-  if(!file) return
-  const d=document.createElement('div')
-  d.textContent='📎 '+file.name
-  chatBody.appendChild(d)
-  scrollBottom()
-}
-
-function sendMessage(){
-  const t=msgInput.value.trim()
-  if(!t) return
-  const d=document.createElement('div')
-  d.textContent='🗨️ '+t
-  chatBody.appendChild(d)
-  msgInput.value=''
-  scrollBottom()
-}
 
 async function sendSnapshot(){
-  const pre=document.createElement('pre')
-  pre.textContent='📸 Screenshot WebAppForge (solo UI interna)'
-  chatBody.appendChild(pre)
-  scrollBottom()
+  const preview = document.querySelector('.preview')
+  const placeholder = document.getElementById('previewPlaceholder')
 
-  const canvas=await html2canvas(wafRoot,{
-    backgroundColor:null,
-    scale:window.devicePixelRatio||1,
-    useCORS:true
-  })
+  preview.style.visibility = 'hidden'
+  placeholder.style.display = 'flex'
 
-  const img=document.createElement('img')
-  img.src=canvas.toDataURL('image/png')
+  await new Promise(r => setTimeout(r, 120))
+
+  const canvas = await html2canvas(wafRoot,{useCORS:true})
+  const img = document.createElement('img')
+  img.src = canvas.toDataURL('image/png')
   chatBody.appendChild(img)
-  scrollBottom()
+
+  placeholder.style.display = 'none'
+  preview.style.visibility = 'visible'
 }
 </script>
 
