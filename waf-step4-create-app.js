@@ -153,5 +153,11 @@ window.WAF_STEP4 = { open };
 
 /* ---------- BOOT ---------- */
 document.addEventListener('DOMContentLoaded', init);
-
+})();
+// Load STEP 5 controller (no dashboard.html changes)
+(function(){
+  const s=document.createElement('script');
+  s.src='waf-step5-controller.js';
+  s.async=true;
+  document.head.appendChild(s);
 })();
