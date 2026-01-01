@@ -255,24 +255,7 @@ msgInput.addEventListener('keydown', function(e){
   }
 });
 </script>
-  <script>
-const lightSlider = document.getElementById('wafLight');
-const lightVal = document.getElementById('wafLightVal');
-
-function applyLight(value) {
-  const v = value / 100;
-  document.body.style.filter = `brightness(${v})`;
-  lightVal.textContent = value + '%';
-}
-
-if (lightSlider) {
-  applyLight(lightSlider.value);
-
-  lightSlider.addEventListener('input', (e) => {
-    applyLight(e.target.value);
-  });
-}
-</script>
+ 
 <script src="./waf-step4-create-app.js"></script>
 <script src="./waf-step5-controller.js"></script>
 <script src="./waf-step6-workspace.js"></script>
