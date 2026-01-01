@@ -19,29 +19,17 @@ const modalHTML = `
     <p>Select app type</p>
 
     <div class="app-types">
-      <div class="app-type" data-type="web">
-        <h4>🌐 Web</h4>
-        <p>Standard Web App</p>
-      </div>
-      <div class="app-type" data-type="pwa">
-        <h4>📲 PWA</h4>
-        <p>Installable Progressive Web App</p>
-      </div>
-      <div class="app-type" data-type="ios">
-        <h4>🍎 iOS</h4>
-        <p>Apple App Store</p>
-      </div>
-      <div class="app-type" data-type="android">
-        <h4>🤖 Android</h4>
-        <p>Google Play Store</p>
-      </div>
+      <div class="app-type" data-type="web">🌐 Web</div>
+      <div class="app-type" data-type="pwa">📲 PWA</div>
+      <div class="app-type" data-type="ios">🍎 iOS</div>
+      <div class="app-type" data-type="android">🤖 Android</div>
     </div>
 
     <input id="wafAppName" placeholder="App name" />
 
     <div class="modal-actions">
-      <button class="btn secondary" id="wafCancel">Cancel</button>
-      <button class="btn" id="wafContinue">Continue</button>
+      <button id="wafCancel">Cancel</button>
+      <button id="wafContinue">Continue</button>
     </div>
   </div>
 </div>
@@ -50,58 +38,11 @@ const modalHTML = `
 /* ---------- STYLES ---------- */
 const style = document.createElement('style');
 style.textContent = `
-.modal-overlay{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;align-items:center;justify-content:center;
-  z-index:9999
-}
-.modal{
-  width:520px;
-  background:#0B1220;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
-  padding:22px;
-  color:#fff
-}
-.modal h3{margin-bottom:10px}
-.modal p{opacity:.85;margin-bottom:14px}
-.modal input{
-  width:100%;padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  margin-bottom:14px
-}
-.modal-actions{
-  display:flex;gap:10px;justify-content:flex-end
-}
-.app-types{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-  margin-bottom:16px
-}
-.app-type{
-  padding:16px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.04);
-  cursor:pointer;
-  transition:.2s
-}
-.app-type:hover{border-color:#1F7CFF}
-.app-type.active{
-  background:linear-gradient(
-    90deg,
-    rgba(31,124,255,.25),
-    rgba(224,86,253,.25)
-  );
-  border-color:#E056FD
-}
-.app-type h4{margin-bottom:6px}
-.app-type p{font-size:12px;opacity:.8}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9999}
+.modal{width:520px;background:#0B1220;border-radius:18px;padding:22px;color:#fff}
+.app-types{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px}
+.app-type{padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);cursor:pointer}
+.app-type.active{background:linear-gradient(90deg,#1F7CFF,#E056FD)}
 `;
 document.head.appendChild(style);
 
@@ -114,61 +55,39 @@ function init(){
   const input = modal.querySelector('#wafAppName');
 
   types.forEach(el=>{
-    el.addEventListener('click',()=>{
+    el.onclick = ()=>{
       types.forEach(t=>t.classList.remove('active'));
       el.classList.add('active');
       state.appType = el.dataset.type;
-    });
+    };
   });
 
-  modal.querySelector('#wafCancel').onclick = close;
-  modal.querySelector('#wafContinue').onclick = ()=>{
+  document.getElementById('wafCancel').onclick = close;
+  document.getElementById('wafContinue').onclick = ()=>{
     state.appName = input.value.trim();
-    if(!state.appType || !state.appName){
-      alert('Select app type and name');
-      return;
-    }
-    console.log('✅ NEW APP CREATED', state);
-    close();
+    if(!state.appType || !state.appName) return alert('Missing data');
 
-    // 🔮 Hook futuro (Step 5, 6, 7…)
     document.dispatchEvent(
-      new CustomEvent('waf:create-app', { detail: state })
+      new CustomEvent('waf:create-app', { detail: {...state} })
     );
+    close();
   };
 }
 
-/* ---------- API PUBBLICA ---------- */
+/* ---------- API ---------- */
 function open(){
-  const modal = document.getElementById('wafStep4Modal');
-  if(modal) modal.style.display = 'flex';
+  const m = document.getElementById('wafStep4Modal');
+  if(m) m.style.display = 'flex';
 }
 function close(){
-  const modal = document.getElementById('wafStep4Modal');
-  if(modal) modal.style.display = 'none';
+  const m = document.getElementById('wafStep4Modal');
+  if(m) m.style.display = 'none';
 }
 
-/* ---------- EXPOSE ---------- */
+/* ---------- EXPOSE (FONDAMENTALE) ---------- */
 window.WAF_STEP4 = { open };
 
 /* ---------- BOOT ---------- */
-// Load STEP 5 controller FIRST (must listen before Step 4 fires events)
-(function(){
-  const s = document.createElement('script');
-  s.src = 'waf-step5-controller.js?v=' + Date.now();
-  s.async = false; // FONDAMENTALE
-  document.head.appendChild(s);
-})();
-
-(function(){
-
-/* ---------- STATE ---------- */
-const state = {
-  appType: null,
-  appName: ''
-};
-
-/* ... TUTTO STEP 4 INVARIATO ... */
-
 document.addEventListener('DOMContentLoaded', init);
+
 })();
