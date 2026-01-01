@@ -78,13 +78,21 @@
         gap:10px;
         justify-content:flex-end
       }
-      .modal-actions button{
-        padding:10px 14px;
-        border-radius:10px;
-        border:none;
-        cursor:pointer;
-        font-weight:700
-      }
+      .waf-btn{
+  padding:12px 18px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(90deg,#1F7CFF,#E056FD);
+}
+
+.waf-btn.secondary{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.16);
+  color:#fff;
+}
     `;
     document.head.appendChild(style);
 
@@ -107,8 +115,8 @@
           <input id="wafAppName" placeholder="App name" />
 
           <div class="modal-actions">
-            <button id="wafCancel">Cancel</button>
-            <button id="wafContinue">Continue</button>
+            <button id="wafCancel" class="waf-btn secondary">Cancel</button>
+<button id="wafContinue" class="waf-btn">Continue</button>
           </div>
         </div>
       </div>
