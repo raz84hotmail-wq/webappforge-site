@@ -200,6 +200,57 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   </div>
 </div>
 
+<script>
+const aiBox = document.getElementById('aiBox')
+const chatBody = document.getElementById('chatBody')
+const wafRoot = document.getElementById('wafRoot')
+const msgInput = document.getElementById('msgInput')
+
+function toggleAI(){
+  aiBox.classList.toggle('collapsed')
+}
+
+function sendFile(file){
+  if(!file) return
+  const d=document.createElement('div')
+  d.textContent='📎 '+file.name
+  chatBody.appendChild(d)
+  chatBody.scrollTop=chatBody.scrollHeight
+}
+
+function sendMessage(){
+  const t=msgInput.value.trim()
+  if(!t) return
+  const d=document.createElement('div')
+  d.textContent='🗨️ '+t
+  chatBody.appendChild(d)
+  msgInput.value=''
+  chatBody.scrollTop=chatBody.scrollHeight
+}
+
+function sendSnapshot(){
+  html2canvas(wafRoot,{
+    backgroundColor:null,
+    scale:window.devicePixelRatio || 1,
+    useCORS:true
+  }).then(canvas=>{
+    const img=document.createElement('img')
+    img.src=canvas.toDataURL('image/png')
+    img.style.maxWidth='100%'
+    img.style.borderRadius='12px'
+    img.style.marginTop='8px'
+    chatBody.appendChild(img)
+    chatBody.scrollTop=chatBody.scrollHeight
+  })
+}
+
+msgInput.addEventListener('keydown', function(e){
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+</script>
 <script src="./waf-step4-create-app.js"></script>
 <script src="./waf-step5-controller.js"></script>
 <script src="./waf-step6-workspace.js"></script>
