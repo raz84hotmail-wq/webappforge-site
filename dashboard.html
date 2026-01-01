@@ -200,6 +200,7 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   </div>
 </div>
 
+<!--
 <script>
 const aiBox = document.getElementById('aiBox')
 const chatBody = document.getElementById('chatBody')
@@ -243,13 +244,15 @@ function sendSnapshot(){
     chatBody.scrollTop=chatBody.scrollHeight
   })
 }
-  msgInput.addEventListener('keydown', function(e){
+
+msgInput.addEventListener('keydown', function(e){
   if (e.key === 'Enter') {
     e.preventDefault();
     sendMessage();
   }
 });
 </script>
+-->
 <script src="./waf-step4-create-app.js"></script>
 <script src="./waf-step5-controller.js"></script>
 <script src="./waf-step6-workspace.js"></script>
