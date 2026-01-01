@@ -1,4 +1,4 @@
-/* =========================================================
+  /* =========================================================
    WebAppForge – STEP 6
    6.0 Workspace Foundation
    6.1.x File Tree / Project Explorer (folders + collapsible + search)
@@ -860,16 +860,81 @@
     });
   }
 
-  /* ---------------------------------------------------------
+    /* ---------------------------------------------------------
      BOOT
      --------------------------------------------------------- */
   function boot() {
     document.addEventListener(EVT_PROJECT_REGISTERED, onProjectRegistered);
+    initChat();
     safeLog("Loaded (6.0 + 6.1.x + 6.2.x + 6.3 + iPhone Preview)");
   }
 
   document.readyState === "loading"
     ? document.addEventListener("DOMContentLoaded", boot)
     : boot();
+
+
+  /* ---------------------------------------------------------
+     AI CHAT (spostata da dashboard.html)
+     --------------------------------------------------------- */
+  function initChat(){
+
+    const aiBox = document.getElementById('aiBox')
+    const chatBody = document.getElementById('chatBody')
+    const wafRoot = document.getElementById('wafRoot')
+    const msgInput = document.getElementById('msgInput')
+
+    if(!aiBox || !msgInput){
+      console.warn('[WAF CHAT] DOM not ready')
+      return
+    }
+
+    window.toggleAI = function(){
+      aiBox.classList.toggle('collapsed')
+    }
+
+    window.sendFile = function(file){
+      if(!file) return
+      const d=document.createElement('div')
+      d.textContent='📎 '+file.name
+      chatBody.appendChild(d)
+      chatBody.scrollTop=chatBody.scrollHeight
+    }
+
+    window.sendMessage = function(){
+      const t=msgInput.value.trim()
+      if(!t) return
+      const d=document.createElement('div')
+      d.textContent='🗨️ '+t
+      chatBody.appendChild(d)
+      msgInput.value=''
+      chatBody.scrollTop=chatBody.scrollHeight
+    }
+
+    window.sendSnapshot = function(){
+      html2canvas(wafRoot,{
+        backgroundColor:null,
+        scale:window.devicePixelRatio || 1,
+        useCORS:true
+      }).then(canvas=>{
+        const img=document.createElement('img')
+        img.src=canvas.toDataURL('image/png')
+        img.style.maxWidth='100%'
+        img.style.borderRadius='12px'
+        img.style.marginTop='8px'
+        chatBody.appendChild(img)
+        chatBody.scrollTop=chatBody.scrollHeight
+      })
+    }
+
+    msgInput.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){
+        e.preventDefault()
+        window.sendMessage()
+      }
+    })
+
+    console.log('[WAF CHAT] Ready')
+  }
 
 })();
