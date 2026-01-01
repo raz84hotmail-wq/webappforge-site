@@ -1,171 +1,241 @@
 /* ================================
    WebAppForge – STEP 4
-   Create App Wizard (ISOLATO & STABILE)
+   Create App Wizard (ISOLATO & UI CONSISTENT)
    ================================ */
 
 (function () {
   "use strict";
 
-  console.log("[WAF STEP 4] loading...");
+  const state = { appType: null, appName: "" };
 
-  /* ---------- STATE ---------- */
-  const state = {
-    appType: null,
-    appName: ""
-  };
+  function injectStylesOnce() {
+    if (document.getElementById("wafStep4Styles")) return;
 
-  /* ---------- INIT ---------- */
-  function init() {
-    if (document.getElementById("wafStep4Modal")) return;
-
-    /* ---------- STYLES ---------- */
     const style = document.createElement("style");
+    style.id = "wafStep4Styles";
     style.textContent = `
-      .modal-overlay{
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,.6);
-        display:none;
-        align-items:center;
-        justify-content:center;
-        z-index:9999
+      /* ===== Overlay + Modal ===== */
+      #wafStep4Modal{
+        position:fixed !important;
+        inset:0 !important;
+        display:none !important;
+        align-items:center !important;
+        justify-content:center !important;
+        background:rgba(0,0,0,.55) !important;
+        z-index:9999 !important;
       }
-      .modal{
-        width:520px;
-        background:#0B1220;
-        border-radius:18px;
-        border:1px solid rgba(255,255,255,.12);
-        padding:22px;
-        color:#fff
+      #wafStep4Modal .waf-modal{
+        width:640px !important;
+        max-width:calc(100vw - 40px) !important;
+        background:rgba(11,18,32,.92) !important;
+        border:1px solid rgba(255,255,255,.14) !important;
+        border-radius:18px !important;
+        padding:22px !important;
+        color:#fff !important;
+        box-shadow:0 18px 60px rgba(0,0,0,.35) !important;
+        backdrop-filter: blur(8px) !important;
       }
-      .modal h3{margin-bottom:10px}
-      .modal p{opacity:.85;margin-bottom:14px}
-      .app-types{
-        display:grid;
-        grid-template-columns:repeat(2,1fr);
-        gap:14px;
-        margin-bottom:16px
+      #wafStep4Modal h3{
+        margin:0 0 6px 0 !important;
+        font-size:22px !important;
+        font-weight:800 !important;
       }
-      .app-type{
-        padding:16px;
-        border-radius:14px;
-        border:1px solid rgba(255,255,255,.12);
-        background:rgba(255,255,255,.04);
-        cursor:pointer;
-        text-align:center;
-        transition:.2s
+      #wafStep4Modal p{
+        margin:0 0 14px 0 !important;
+        opacity:.85 !important;
+        font-size:14px !important;
+        font-weight:600 !important;
       }
-      .app-type:hover{border-color:#1F7CFF}
-      .app-type.active{
+
+      /* ===== App types ===== */
+      #wafStep4Modal .waf-types{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:14px !important;
+        margin-bottom:14px !important;
+      }
+      #wafStep4Modal .waf-type{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:10px !important;
+        height:64px !important;
+        border-radius:16px !important;
+        border:1px solid rgba(255,255,255,.16) !important;
+        background:rgba(255,255,255,.05) !important;
+        cursor:pointer !important;
+        user-select:none !important;
+        font-weight:800 !important;
+        font-size:16px !important;
+        transition:transform .12s ease, border-color .12s ease, background .12s ease !important;
+      }
+      #wafStep4Modal .waf-type:hover{
+        border-color:rgba(31,124,255,.8) !important;
+        transform:translateY(-1px) !important;
+      }
+      #wafStep4Modal .waf-type.active{
+        border-color:rgba(224,86,253,.95) !important;
         background:linear-gradient(
           90deg,
-          rgba(31,124,255,.25),
-          rgba(224,86,253,.25)
-        );
-        border-color:#E056FD
+          rgba(31,124,255,.22),
+          rgba(224,86,253,.18)
+        ) !important;
       }
-      .modal input{
-        width:100%;
-        padding:12px;
-        border-radius:12px;
-        border:1px solid rgba(255,255,255,.15);
-        background:rgba(255,255,255,.06);
-        color:#fff;
-        margin-bottom:14px
-      }
-      .modal-actions{
-        display:flex;
-        gap:10px;
-        justify-content:flex-end
-      }
-      .waf-btn{
-  padding:12px 18px;
-  border-radius:12px;
-  border:none;
-  cursor:pointer;
-  font-weight:700;
-  color:#fff;
-  background:linear-gradient(90deg,#1F7CFF,#E056FD);
-}
 
-.waf-btn.secondary{
-  background:transparent;
-  border:1px solid rgba(255,255,255,0.16);
-  color:#fff;
-}
+      /* ===== Input ===== */
+      #wafStep4Modal .waf-input{
+        width:100% !important;
+        padding:12px 14px !important;
+        border-radius:14px !important;
+        border:1px solid rgba(255,255,255,.16) !important;
+        background:rgba(255,255,255,.06) !important;
+        color:#fff !important;
+        outline:none !important;
+        font-size:14px !important;
+        font-weight:700 !important;
+      }
+      #wafStep4Modal .waf-input::placeholder{
+        color:rgba(255,255,255,.55) !important;
+        font-weight:700 !important;
+      }
+
+      /* ===== Actions ===== */
+      #wafStep4Modal .waf-actions{
+        margin-top:14px !important;
+        display:flex !important;
+        justify-content:flex-end !important;
+        gap:10px !important;
+      }
+
+      /* ===== Buttons (IDENTICI AL DESIGN SYSTEM) ===== */
+      #wafStep4Modal .waf-btn{
+        -webkit-appearance:none !important;
+        appearance:none !important;
+        border:none !important;
+        outline:none !important;
+        cursor:pointer !important;
+
+        padding:12px 16px !important;
+        border-radius:12px !important;
+        font-weight:800 !important;
+        font-size:13px !important;
+        color:#fff !important;
+
+        background:linear-gradient(90deg,#1F7CFF,#E056FD) !important;
+        box-shadow:0 10px 30px rgba(0,0,0,.18) !important;
+        transition:transform .12s ease, filter .12s ease, opacity .12s ease !important;
+      }
+      #wafStep4Modal .waf-btn:hover{ filter:brightness(1.06) !important; }
+      #wafStep4Modal .waf-btn:active{ transform:translateY(1px) !important; }
+
+      #wafStep4Modal .waf-btn.secondary{
+        background:transparent !important;
+        border:1px solid rgba(255,255,255,.18) !important;
+        color:#fff !important;
+        box-shadow:none !important;
+      }
+      #wafStep4Modal .waf-btn.secondary:hover{
+        background:rgba(255,255,255,.06) !important;
+      }
+
+      #wafStep4Modal .waf-btn:disabled{
+        opacity:.45 !important;
+        cursor:not-allowed !important;
+        filter:none !important;
+        transform:none !important;
+      }
     `;
     document.head.appendChild(style);
+  }
 
-    /* ---------- HTML ---------- */
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `
-      <div class="modal-overlay" id="wafStep4Modal">
-        <div class="modal">
+  function injectModalOnce() {
+    if (document.getElementById("wafStep4Modal")) return;
+
+    const html = `
+      <div id="wafStep4Modal" aria-hidden="true">
+        <div class="waf-modal">
           <h3>Create your App</h3>
           <p>Select app type</p>
 
-          <div class="app-types">
-            <div class="app-type" data-type="web">🌐 Web</div>
-            <div class="app-type" data-type="pwa">📲 PWA</div>
-            <div class="app-type" data-type="ios">🍎 iOS</div>
-            <div class="app-type" data-type="android">🤖 Android</div>
+          <div class="waf-types">
+            <div class="waf-type" data-type="web">🌐 <span>Web</span></div>
+            <div class="waf-type" data-type="pwa">📲 <span>PWA</span></div>
+            <div class="waf-type" data-type="ios">🍎 <span>iOS</span></div>
+            <div class="waf-type" data-type="android">🤖 <span>Android</span></div>
           </div>
 
-          <input id="wafAppName" placeholder="App name" />
+          <input class="waf-input" id="wafAppName" placeholder="App name" />
 
-          <div class="modal-actions">
-            <button id="wafCancel" class="waf-btn secondary">Cancel</button>
-<button id="wafContinue" class="waf-btn">Continue</button>
+          <div class="waf-actions">
+            <button class="waf-btn secondary" id="wafCancel" type="button">Cancel</button>
+            <button class="waf-btn" id="wafContinue" type="button" disabled>Continue</button>
           </div>
         </div>
       </div>
-      `
-    );
+    `;
+    document.body.insertAdjacentHTML("beforeend", html);
 
-    /* ---------- LOGIC ---------- */
     const modal = document.getElementById("wafStep4Modal");
-    const types = modal.querySelectorAll(".app-type");
-    const input = modal.querySelector("#wafAppName");
+    const types = modal.querySelectorAll(".waf-type");
+    const input = document.getElementById("wafAppName");
+    const btnCancel = document.getElementById("wafCancel");
+    const btnContinue = document.getElementById("wafContinue");
 
-    types.forEach(el => {
+    function updateContinueState() {
+      const ok = !!state.appType && !!input.value.trim();
+      btnContinue.disabled = !ok;
+    }
+
+    types.forEach((el) => {
       el.addEventListener("click", () => {
-        types.forEach(t => t.classList.remove("active"));
+        types.forEach((t) => t.classList.remove("active"));
         el.classList.add("active");
         state.appType = el.dataset.type;
+        updateContinueState();
       });
     });
 
-    document.getElementById("wafCancel").onclick = () => {
+    input.addEventListener("input", updateContinueState);
+
+    btnCancel.addEventListener("click", () => {
       modal.style.display = "none";
-    };
+    });
 
-    document.getElementById("wafContinue").onclick = () => {
+    btnContinue.addEventListener("click", () => {
       state.appName = input.value.trim();
-      if (!state.appType || !state.appName) {
-        alert("Select app type and name");
-        return;
-      }
-
-      console.log("[WAF STEP 4] create app", state);
+      if (!state.appType || !state.appName) return;
 
       document.dispatchEvent(
         new CustomEvent("waf:create-app", { detail: { ...state } })
       );
 
       modal.style.display = "none";
-    };
+    });
 
-    console.log("[WAF STEP 4] ready");
+    // click fuori per chiudere
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
   }
 
-  /* ---------- API PUBBLICA ---------- */
   window.WAF_STEP4 = {
     open() {
-      init();
-      document.getElementById("wafStep4Modal").style.display = "flex";
+      injectStylesOnce();
+      injectModalOnce();
+
+      const modal = document.getElementById("wafStep4Modal");
+      const input = document.getElementById("wafAppName");
+
+      // reset UI (ma NON resetto appType se vuoi mantenerlo, qui resetto tutto)
+      state.appType = null;
+      state.appName = "";
+      document.querySelectorAll("#wafStep4Modal .waf-type").forEach(t => t.classList.remove("active"));
+      input.value = "";
+      document.getElementById("wafContinue").disabled = true;
+
+      modal.style.display = "flex";
+      input.focus();
     }
   };
 
-  console.log("[WAF STEP 4] loaded");
 })();
