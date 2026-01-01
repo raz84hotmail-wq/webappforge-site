@@ -3,6 +3,7 @@
    6.0 Workspace Foundation
    6.1 File Tree / Project Explorer
    6.2 Code Editor (Base)
+   6.3 Live Preview Sync + iPhone Preview
    ========================================================= */
 
 (function () {
@@ -12,7 +13,6 @@
      EVENTS
      --------------------------------------------------------- */
   const EVT_PROJECT_REGISTERED = "waf:project-registered";
-  const EVT_FILE_SELECTED = "waf:file-selected";
 
   /* ---------------------------------------------------------
      STATE
@@ -21,6 +21,7 @@
   let filesIndex = [];
   let activeFile = null;
   let fileContents = {};
+  let previewTimer = null;
 
   /* ---------------------------------------------------------
      HELPERS
@@ -31,10 +32,6 @@
 
   function safeLog(...args) {
     console.log("[WAF STEP 6]", ...args);
-  }
-
-  function dispatch(name, detail) {
-    document.dispatchEvent(new CustomEvent(name, { detail }));
   }
 
   /* ---------------------------------------------------------
@@ -82,11 +79,6 @@
         z-index:5;
         font-size:13px;
       }
-      .waf-ft-title{
-        font-weight:800;
-        margin-bottom:10px;
-        opacity:.9;
-      }
       .waf-ft-file{
         padding:6px 8px;
         border-radius:8px;
@@ -95,10 +87,6 @@
         white-space:nowrap;
         overflow:hidden;
         text-overflow:ellipsis;
-      }
-      .waf-ft-file:hover{
-        background:rgba(255,255,255,.06);
-        opacity:1;
       }
       .waf-ft-file.active{
         background:linear-gradient(
@@ -115,7 +103,7 @@
         position:absolute;
         top:120px;
         left:260px;
-        right:0;
+        right:360px;
         bottom:0;
         background:#0B1220;
         display:flex;
@@ -124,23 +112,14 @@
       }
       .waf-editor-header{
         height:42px;
+        padding:0 14px;
         display:flex;
         align-items:center;
-        padding:0 14px;
         border-bottom:1px solid rgba(255,255,255,.08);
-        font-size:13px;
-        gap:10px;
-      }
-      .waf-editor-filename{
-        font-weight:800;
-      }
-      .waf-editor-body{
-        flex:1;
-        padding:0;
+        font-weight:700;
       }
       .waf-editor-textarea{
-        width:100%;
-        height:100%;
+        flex:1;
         background:#0B1220;
         color:#fff;
         border:none;
@@ -151,144 +130,135 @@
         font-size:13px;
         line-height:1.5;
       }
+
+      /* ===== IPHONE PREVIEW ===== */
+      .waf-preview{
+        position:absolute;
+        top:120px;
+        right:0;
+        bottom:0;
+        width:360px;
+        background:#000;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        z-index:4;
+      }
+      .waf-phone{
+        width:320px;
+        height:650px;
+        background:#111;
+        border-radius:38px;
+        padding:14px;
+        box-shadow:0 0 0 6px #222;
+      }
+      .waf-phone iframe{
+        width:100%;
+        height:100%;
+        border:none;
+        border-radius:24px;
+        background:#fff;
+      }
     `;
     document.head.appendChild(style);
   }
 
   /* ---------------------------------------------------------
-     WORKSPACE BAR (6.0)
+     UI BUILDERS
      --------------------------------------------------------- */
-  function showWorkspaceBar(project) {
+  function showWorkspaceBar(p) {
     if ($(".waf-workspace-bar")) return;
-
     const bar = document.createElement("div");
     bar.className = "waf-workspace-bar";
     bar.innerHTML = `
-      <div class="waf-workspace-tag">${project.name}</div>
-      <div class="waf-workspace-tag">${project.type.toUpperCase()}</div>
-      <div class="waf-workspace-tag">${project.method}</div>
-      <div style="opacity:.6;margin-left:auto">Workspace</div>
+      <div class="waf-workspace-tag">${p.name}</div>
+      <div class="waf-workspace-tag">${p.type.toUpperCase()}</div>
+      <div class="waf-workspace-tag">${p.method}</div>
+      <div style="margin-left:auto;opacity:.6">Workspace</div>
     `;
     document.body.appendChild(bar);
   }
 
-  /* ---------------------------------------------------------
-     FILE TREE (6.1)
-     --------------------------------------------------------- */
   function buildFileTree(files) {
     const tree = document.createElement("div");
     tree.className = "waf-file-tree";
-    tree.id = "wafFileTree";
-
-    const title = document.createElement("div");
-    title.className = "waf-ft-title";
-    title.textContent = "Project Files";
-    tree.appendChild(title);
-
     files.forEach(f => {
       const row = document.createElement("div");
       row.className = "waf-ft-file";
       row.textContent = f.path;
-      row.dataset.path = f.path;
       row.onclick = () => openFile(f.path);
       tree.appendChild(row);
     });
-
-    return tree;
+    document.body.appendChild(tree);
   }
 
-  /* ---------------------------------------------------------
-     EDITOR (6.2)
-     --------------------------------------------------------- */
   function ensureEditor() {
     if ($(".waf-editor")) return;
+    const ed = document.createElement("div");
+    ed.className = "waf-editor";
+    ed.innerHTML = `
+      <div class="waf-editor-header" id="wafEditorFile">No file</div>
+      <textarea class="waf-editor-textarea" disabled></textarea>
+    `;
+    document.body.appendChild(ed);
+  }
 
-    const editor = document.createElement("div");
-    editor.className = "waf-editor";
-    editor.innerHTML = `
-      <div class="waf-editor-header">
-        <div class="waf-editor-filename">No file selected</div>
-      </div>
-      <div class="waf-editor-body">
-        <textarea class="waf-editor-textarea" disabled></textarea>
+  function ensurePreview() {
+    if ($(".waf-preview")) return;
+    const p = document.createElement("div");
+    p.className = "waf-preview";
+    p.innerHTML = `
+      <div class="waf-phone">
+        <iframe id="wafPreviewFrame"></iframe>
       </div>
     `;
-    document.body.appendChild(editor);
+    document.body.appendChild(p);
   }
 
+  /* ---------------------------------------------------------
+     EDIT + LIVE PREVIEW (6.3)
+     --------------------------------------------------------- */
   function openFile(path) {
     activeFile = path;
-
-    document.querySelectorAll(".waf-ft-file")
-      .forEach(el => el.classList.remove("active"));
-
-    const row = document.querySelector(
-      `.waf-ft-file[data-path="${CSS.escape(path)}"]`
-    );
-    if (row) row.classList.add("active");
-
     ensureEditor();
+    ensurePreview();
 
-    const title = $(".waf-editor-filename");
-    const textarea = $(".waf-editor-textarea");
+    $("#wafEditorFile").textContent = path;
+    const ta = $(".waf-editor-textarea");
+    ta.disabled = false;
+    ta.value = fileContents[path] || "";
 
-    title.textContent = path;
-    textarea.disabled = false;
-    textarea.value = fileContents[path] || "";
-
-    textarea.oninput = () => {
-      fileContents[path] = textarea.value;
+    ta.oninput = () => {
+      fileContents[path] = ta.value;
+      schedulePreview();
     };
+  }
 
-    dispatch(EVT_FILE_SELECTED, { filePath: path });
-    safeLog("Editor opened:", path);
+  function schedulePreview() {
+    if (previewTimer) clearTimeout(previewTimer);
+    previewTimer = setTimeout(updatePreview, 400);
+  }
+
+  function updatePreview() {
+    const html = fileContents["index.html"];
+    if (!html) return;
+    const iframe = $("#wafPreviewFrame");
+    iframe.srcdoc = html;
   }
 
   /* ---------------------------------------------------------
-     LOAD FILES (IndexedDB)
-     --------------------------------------------------------- */
-  function loadFilesFromIDB(projectId) {
-    return new Promise(resolve => {
-      const req = indexedDB.open("waf_projects_db", 1);
-      req.onsuccess = () => {
-        const db = req.result;
-        const tx = db.transaction("projects", "readonly");
-        const store = tx.objectStore("projects");
-        const getReq = store.get(projectId);
-        getReq.onsuccess = () => {
-          const rec = getReq.result;
-          if (!rec || !rec.files) return resolve([]);
-          rec.files.forEach(f => {
-            fileContents[f.path] = f.isBinary ? "" : f.content;
-          });
-          resolve(rec.files.map(f => ({ path: f.path })));
-        };
-      };
-      req.onerror = () => resolve([]);
-    });
-  }
-
-  /* ---------------------------------------------------------
-     MAIN HANDLER
+     LOAD PROJECT
      --------------------------------------------------------- */
   function onProjectRegistered(e) {
     currentProject = e.detail;
     injectStyles();
     showWorkspaceBar(currentProject);
     ensureEditor();
+    ensurePreview();
 
-    $(".waf-file-tree")?.remove();
-
-    if (currentProject.method === "zip") {
-      loadFilesFromIDB(currentProject.id).then(files => {
-        filesIndex = files;
-        document.body.appendChild(buildFileTree(filesIndex));
-      });
-    } else {
-      filesIndex = [{ path: "index.html" }];
-      fileContents["index.html"] = "";
-      document.body.appendChild(buildFileTree(filesIndex));
-    }
+    filesIndex = [{ path: "index.html" }];
+    fileContents["index.html"] = "";
+    buildFileTree(filesIndex);
   }
 
   /* ---------------------------------------------------------
@@ -296,13 +266,11 @@
      --------------------------------------------------------- */
   function boot() {
     document.addEventListener(EVT_PROJECT_REGISTERED, onProjectRegistered);
-    safeLog("Loaded (6.0 + 6.1 + 6.2)");
+    safeLog("Loaded (6.0 → 6.3)");
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", boot)
+    : boot();
 
 })();
