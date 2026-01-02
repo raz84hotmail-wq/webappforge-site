@@ -139,6 +139,33 @@ body{background:#0B1220;color:#fff;height:100vh;overflow:hidden}
   cursor:pointer;color:#fff
 }
 .icon-btn input{display:none}
+  /* ===== SLIDER LIGHT – SAFARI FIX ===== */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,#1F7CFF,#E056FD);
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,#1F7CFF,#E056FD);
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #1F7CFF;
+  margin-top: -6px;
+  box-shadow: 0 0 12px rgba(31,124,255,.8);
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -254,8 +281,27 @@ msgInput.addEventListener('keydown', function(e){
     sendMessage();
   }
 });
+  
 </script>
- 
+ <script>
+const lightSlider = document.getElementById('wafLight');
+const lightVal = document.getElementById('wafLightVal');
+
+function applyLight(value) {
+  const v = value / 100;
+  document.body.style.filter = `brightness(${v})`;
+  lightVal.textContent = value + '%';
+}
+
+if (lightSlider) {
+  applyLight(lightSlider.value);
+
+  lightSlider.addEventListener('input', (e) => {
+    applyLight(e.target.value);
+  });
+}
+   
+</script>
 <script src="./waf-step4-create-app.js"></script>
 <script src="./waf-step5-controller.js"></script>
 <script src="./waf-step6-workspace.js"></script>
