@@ -30,6 +30,7 @@
      HELPERS
      ========================================================= */
   const $ = (s, r = document) => r.querySelector(s);
+
   const esc = s =>
     String(s || "")
       .replaceAll("&", "&amp;")
@@ -42,7 +43,7 @@
   const log = (...a) => console.log("[WAF STEP 6]", ...a);
 
   /* =========================================================
-     STYLES (GRAFICA INVARIATA – FIX ALLINEAMENTO)
+     STYLES (GRAFICA INVARIATA – FIX TECNICI)
      ========================================================= */
   function injectStyles() {
     if ($("#wafStep6Styles")) return;
@@ -57,13 +58,17 @@
         display:flex;align-items:center;gap:10px;
         padding:0 14px;z-index:6;font-size:13px
       }
-      .waf-tag{padding:4px 8px;border-radius:8px;
-        background:rgba(255,255,255,.08);font-weight:800}
+      .waf-tag{
+        padding:4px 8px;border-radius:8px;
+        background:rgba(255,255,255,.08);font-weight:800
+      }
       .waf-right{margin-left:auto;display:flex;gap:8px}
-      .waf-btn{padding:8px 10px;border-radius:10px;
+      .waf-btn{
+        padding:8px 10px;border-radius:10px;
         background:rgba(255,255,255,.08);
         border:1px solid rgba(255,255,255,.14);
-        color:#fff;font-weight:800;cursor:pointer}
+        color:#fff;font-weight:800;cursor:pointer
+      }
 
       .waf-tree{
         position:absolute;top:120px;left:0;bottom:0;width:280px;
@@ -71,8 +76,10 @@
         border-right:1px solid rgba(255,255,255,.08);
         padding:10px;overflow:auto;z-index:5
       }
-      .waf-node{padding:6px 8px;border-radius:10px;
-        cursor:pointer;opacity:.9}
+      .waf-node{
+        padding:6px 8px;border-radius:10px;
+        cursor:pointer;opacity:.9
+      }
       .waf-node:hover{background:rgba(255,255,255,.06)}
 
       .waf-editor{
@@ -86,7 +93,7 @@
       }
       .waf-editor-body{flex:1;display:flex;overflow:hidden}
 
-      /* ===== FIX LINE NUMBERS ===== */
+      /* ===== LINE NUMBERS FIX ===== */
       .waf-lines{
         width:64px;
         background:rgba(255,255,255,.03);
@@ -126,12 +133,19 @@
         height:42px;display:flex;align-items:center;
         gap:8px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.08)
       }
-      .waf-canvas{flex:1;display:flex;align-items:center;justify-content:center}
-      .waf-phone{
-        width:320px;height:660px;background:#111;border-radius:40px;
-        padding:14px;box-shadow:0 18px 60px rgba(0,0,0,.45)
+      .waf-canvas{
+        flex:1;display:flex;
+        align-items:center;justify-content:center
       }
-      .waf-phone iframe{width:100%;height:100%;border:none;border-radius:26px}
+      .waf-phone{
+        width:320px;height:660px;background:#111;
+        border-radius:40px;padding:14px;
+        box-shadow:0 18px 60px rgba(0,0,0,.45)
+      }
+      .waf-phone iframe{
+        width:100%;height:100%;
+        border:none;border-radius:26px
+      }
     `;
     document.head.appendChild(style);
   }
@@ -161,6 +175,7 @@
   function buildTree() {
     const t = document.createElement("div");
     t.className = "waf-tree";
+
     files.forEach(f => {
       const n = document.createElement("div");
       n.className = "waf-node";
@@ -168,6 +183,7 @@
       n.onclick = () => openFile(f);
       t.appendChild(n);
     });
+
     document.body.appendChild(t);
   }
 
