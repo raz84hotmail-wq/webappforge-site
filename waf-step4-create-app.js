@@ -106,14 +106,6 @@
   color:rgba(255,255,255,.55);
 }
 
-/* ===== Actions ===== */
-.waf-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:12px;
-  margin-top:18px;
-}
-
 /* ===== Buttons (WAF SYSTEM) ===== */
 .waf-btn{
   padding:12px 18px;
@@ -161,15 +153,6 @@
 .waf-btn.primary:hover{
   transform:translateY(-1px);
   box-shadow:0 16px 50px rgba(224,86,253,.6);
-}
-
-.waf-btn.secondary{
-  background:transparent;
-  border:1px solid rgba(255,255,255,.22);
-}
-
-.waf-btn.secondary:hover{
-  background:rgba(255,255,255,.08);
 }
 
 .waf-btn:disabled{
