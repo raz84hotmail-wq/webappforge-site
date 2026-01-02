@@ -125,32 +125,33 @@
   color:#fff;
   transition:all .15s ease;
 }
-/* ===== STEP 4 – ACTION BUTTONS EQUAL ===== */
+/* ===== STEP 4 – ACTION BUTTONS (FINAL) ===== */
+
 .waf-actions{
   display:flex;
-  gap:14px;
+  justify-content:center;
+  gap:16px;
+  margin-top:18px;
 }
 
 .waf-actions .waf-btn{
   flex:1;
-  height:46px;
+  max-width:180px;
+  height:48px;
   font-size:15px;
+  border-radius:14px;
 }
 
-/* CANCEL = POTENTE COME CONTINUE */
+/* CANCEL = COLORATO COME CONTINUE */
 .waf-btn.secondary{
-  background:linear-gradient(90deg,#1F7CFF,#4FA3FF);
+  background:linear-gradient(90deg,#1F7CFF,#E056FD);
   border:none;
-  box-shadow:0 12px 30px rgba(31,124,255,.35);
+  box-shadow:0 12px 40px rgba(31,124,255,.45);
 }
 
 .waf-btn.secondary:hover{
-  filter:brightness(1.08);
-}
-
-/* CONTINUE resta com'è ma allineato */
-.waf-btn.primary{
-  box-shadow:0 12px 40px rgba(224,86,253,.45);
+  transform:translateY(-1px);
+  box-shadow:0 16px 50px rgba(31,124,255,.6);
 }
 .waf-btn.primary{
   background:linear-gradient(90deg,#1F7CFF,#E056FD);
