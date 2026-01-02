@@ -1,5 +1,4 @@
 /* ================================
-
    WebAppForge – STEP 4
    Create App Wizard
    ISOLATO – UI CONSISTENT – STABLE
@@ -107,19 +106,17 @@
   color:rgba(255,255,255,.55);
 }
 
-/* ===== Buttons (WAF SYSTEM) ===== */
+/* ===== Buttons ===== */
 .waf-btn{
-  padding:12px 18px;
-  border-radius:14px;
-  font-weight:900;
-  font-size:13px;
-  cursor:pointer;
   border:none;
+  cursor:pointer;
+  font-weight:900;
   color:#fff;
+  border-radius:14px;
   transition:all .15s ease;
 }
-/* ===== STEP 4 – ACTION BUTTONS (FINAL) ===== */
 
+/* ===== STEP 4 – ACTION BUTTONS (FINAL & CLEAN) ===== */
 .waf-actions{
   display:flex;
   justify-content:center;
@@ -132,20 +129,25 @@
   max-width:180px;
   height:48px;
   font-size:15px;
-  border-radius:14px;
 }
 
-/* CANCEL = COLORATO COME CONTINUE */
+/* CANCEL – VISIBILE MA SECONDARIO */
 .waf-btn.secondary{
-  background:linear-gradient(90deg,#1F7CFF,#E056FD);
-  border:none;
-  box-shadow:0 12px 40px rgba(31,124,255,.45);
+  background:linear-gradient(
+    90deg,
+    rgba(31,124,255,.55),
+    rgba(224,86,253,.55)
+  );
+  box-shadow:0 10px 28px rgba(31,124,255,.25);
 }
 
 .waf-btn.secondary:hover{
   transform:translateY(-1px);
-  box-shadow:0 16px 50px rgba(31,124,255,.6);
+  box-shadow:0 14px 36px rgba(31,124,255,.4);
+  filter:brightness(1.05);
 }
+
+/* CONTINUE – PRIMARY */
 .waf-btn.primary{
   background:linear-gradient(90deg,#1F7CFF,#E056FD);
   box-shadow:0 12px 40px rgba(224,86,253,.45);
@@ -215,7 +217,9 @@
 
     input.addEventListener("input", update);
 
-    document.getElementById("wafCancel").onclick = () => modal.style.display = "none";
+    document.getElementById("wafCancel").onclick = () => {
+      modal.style.display = "none";
+    };
 
     btnContinue.onclick = () => {
       state.appName = input.value.trim();
@@ -243,7 +247,9 @@
       state.appType = null;
       state.appName = "";
 
-      document.querySelectorAll(".waf-type").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".waf-type").forEach(t =>
+        t.classList.remove("active")
+      );
       document.getElementById("wafAppName").value = "";
       document.getElementById("wafContinue").disabled = true;
 
