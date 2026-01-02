@@ -125,7 +125,33 @@
   color:#fff;
   transition:all .15s ease;
 }
+/* ===== STEP 4 – ACTION BUTTONS EQUAL ===== */
+.waf-actions{
+  display:flex;
+  gap:14px;
+}
 
+.waf-actions .waf-btn{
+  flex:1;
+  height:46px;
+  font-size:15px;
+}
+
+/* CANCEL = POTENTE COME CONTINUE */
+.waf-btn.secondary{
+  background:linear-gradient(90deg,#1F7CFF,#4FA3FF);
+  border:none;
+  box-shadow:0 12px 30px rgba(31,124,255,.35);
+}
+
+.waf-btn.secondary:hover{
+  filter:brightness(1.08);
+}
+
+/* CONTINUE resta com'è ma allineato */
+.waf-btn.primary{
+  box-shadow:0 12px 40px rgba(224,86,253,.45);
+}
 .waf-btn.primary{
   background:linear-gradient(90deg,#1F7CFF,#E056FD);
   box-shadow:0 12px 40px rgba(224,86,253,.45);
