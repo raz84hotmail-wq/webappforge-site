@@ -122,7 +122,6 @@
         padding:14px;box-shadow:0 18px 60px rgba(0,0,0,.45)
       }
       .waf-phone iframe{width:100%;height:100%;border:none;border-radius:26px}
-      .hidden{display:none!important}
     `;
     document.head.appendChild(style);
   }
@@ -227,7 +226,7 @@
      ========================================================= */
   function debouncePreview() {
     clearTimeout(previewTimer);
-    previewTimer = setTimeout(() => renderPreview(), 300);
+    previewTimer = setTimeout(renderPreview, 300);
   }
 
   function renderPreview(force = false) {
@@ -235,6 +234,45 @@
     const html = contents["index.html"];
     if (!html) return;
     $("#wafFrame").srcdoc = html;
+  }
+
+  /* =========================================================
+     DRAG PHONE (UNICA AGGIUNTA)
+     ========================================================= */
+  function enablePhoneDrag() {
+    const phone = $("#wafPhone");
+    const canvas = phone?.parentElement;
+    if (!phone || !canvas) return;
+
+    let drag = false, sx = 0, sy = 0, sl = 0, st = 0;
+
+    phone.style.position = "absolute";
+    phone.style.cursor = "grab";
+
+    phone.addEventListener("mousedown", e => {
+      if (e.target.tagName === "IFRAME") return;
+      drag = true;
+      phone.style.cursor = "grabbing";
+      const r = phone.getBoundingClientRect();
+      const c = canvas.getBoundingClientRect();
+      sx = e.clientX; sy = e.clientY;
+      sl = r.left - c.left;
+      st = r.top - c.top;
+      e.preventDefault();
+    });
+
+    document.addEventListener("mousemove", e => {
+      if (!drag) return;
+      let x = sl + (e.clientX - sx);
+      let y = st + (e.clientY - sy);
+      phone.style.left = x + "px";
+      phone.style.top = y + "px";
+    });
+
+    document.addEventListener("mouseup", () => {
+      drag = false;
+      phone.style.cursor = "grab";
+    });
   }
 
   /* =========================================================
@@ -253,65 +291,5 @@
     enablePhoneDrag();
     log("READY");
   });
-/* =========================================================
-   DRAG PHONE (MODE B: libero ma con limiti)
-   ========================================================= */
-function enablePhoneDrag() {
-  const phone = document.getElementById("wafPhone");
-  const canvas = phone?.parentElement;
-  if (!phone || !canvas) return;
 
-  let isDragging = false;
-  let startX = 0;
-  let startY = 0;
-  let startLeft = 0;
-  let startTop = 0;
-
-  phone.style.position = "absolute";
-  phone.style.cursor = "grab";
-
-  phone.addEventListener("mousedown", e => {
-    // evita drag se clicchi dentro iframe
-    if (e.target.tagName === "IFRAME") return;
-
-    isDragging = true;
-    phone.style.cursor = "grabbing";
-
-    const rect = phone.getBoundingClientRect();
-    const canvasRect = canvas.getBoundingClientRect();
-
-    startX = e.clientX;
-    startY = e.clientY;
-    startLeft = rect.left - canvasRect.left;
-    startTop = rect.top - canvasRect.top;
-
-    e.preventDefault();
-  });
-
-  document.addEventListener("mousemove", e => {
-    if (!isDragging) return;
-
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-
-    const maxLeft = canvas.clientWidth - phone.offsetWidth;
-    const maxTop = canvas.clientHeight - phone.offsetHeight;
-
-    let newLeft = startLeft + dx;
-    let newTop = startTop + dy;
-
-    // LIMITI (questa è la modalità B)
-    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
-    newTop = Math.max(0, Math.min(maxTop, newTop));
-
-    phone.style.left = newLeft + "px";
-    phone.style.top = newTop + "px";
-  });
-
-  document.addEventListener("mouseup", () => {
-    if (!isDragging) return;
-    isDragging = false;
-    phone.style.cursor = "grab";
-  });
-}
 })();
