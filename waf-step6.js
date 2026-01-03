@@ -250,7 +250,68 @@
     buildEditor();
     buildPreview();
     openFile("index.html");
+    enablePhoneDrag();
     log("READY");
   });
+/* =========================================================
+   DRAG PHONE (MODE B: libero ma con limiti)
+   ========================================================= */
+function enablePhoneDrag() {
+  const phone = document.getElementById("wafPhone");
+  const canvas = phone?.parentElement;
+  if (!phone || !canvas) return;
 
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+
+  phone.style.position = "absolute";
+  phone.style.cursor = "grab";
+
+  phone.addEventListener("mousedown", e => {
+    // evita drag se clicchi dentro iframe
+    if (e.target.tagName === "IFRAME") return;
+
+    isDragging = true;
+    phone.style.cursor = "grabbing";
+
+    const rect = phone.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = rect.left - canvasRect.left;
+    startTop = rect.top - canvasRect.top;
+
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", e => {
+    if (!isDragging) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    const maxLeft = canvas.clientWidth - phone.offsetWidth;
+    const maxTop = canvas.clientHeight - phone.offsetHeight;
+
+    let newLeft = startLeft + dx;
+    let newTop = startTop + dy;
+
+    // LIMITI (questa è la modalità B)
+    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+    newTop = Math.max(0, Math.min(maxTop, newTop));
+
+    phone.style.left = newLeft + "px";
+    phone.style.top = newTop + "px";
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (!isDragging) return;
+    isDragging = false;
+    phone.style.cursor = "grab";
+  });
+}
 })();
