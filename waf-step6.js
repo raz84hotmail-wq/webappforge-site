@@ -1,10 +1,10 @@
 /* =========================================================
- WebAppForge – STEP 6 (STABILE)
- 6.0 Workspace Foundation
- 6.1 File Tree
- 6.2 Code Editor + Line Numbers
- 6.3 Live Preview (Mobile / Desktop)
- ========================================================= */
+   WebAppForge – STEP 6 (STABILE)
+   6.0 Workspace Foundation
+   6.1 File Tree
+   6.2 Code Editor + Line Numbers
+   6.3 Live Preview (Mobile / Desktop)
+   ========================================================= */
 
 (function () {
   "use strict";
@@ -74,10 +74,8 @@
         position:absolute;top:120px;left:0;bottom:0;width:280px;
         background:rgba(11,18,32,.95);
         border-right:1px solid rgba(255,255,255,.08);
-        padding:10px;overflow:auto;z-index:5;
-        display:flex;flex-direction:column
+        padding:10px;overflow:auto;z-index:5
       }
-
       .waf-node{padding:6px 8px;border-radius:10px;
         cursor:pointer;opacity:.9;display:flex;gap:8px}
       .waf-node:hover{background:rgba(255,255,255,.06)}
@@ -87,31 +85,44 @@
         font-weight:800
       }
 
-      .waf-tree-footer{
-        margin-top:auto;
-        padding:10px 6px 6px;
-        border-top:1px solid rgba(255,255,255,.08);
-        display:flex
+      .waf-editor{
+        position:absolute;top:120px;left:280px;right:380px;bottom:0;
+        background:#0B1220;display:flex;flex-direction:column;
+        border-right:1px solid rgba(255,255,255,.08)
+      }
+      .waf-editor-head{
+        height:42px;display:flex;align-items:center;
+        gap:10px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.08)
+      }
+      .waf-editor-body{flex:1;display:flex;overflow:hidden}
+      .waf-lines{
+        width:56px;background:rgba(255,255,255,.03);
+        border-right:1px solid rgba(255,255,255,.08);
+        color:rgba(255,255,255,.5);
+        font-family:monospace;font-size:12px;text-align:right
+      }
+      .waf-lines div{padding:0 10px}
+      .waf-text{
+        flex:1;background:#0B1220;color:#fff;border:none;
+        resize:none;padding:16px;font-family:monospace;
+        font-size:13px;outline:none
       }
 
-      .waf-theme-toggle{
-        padding:6px 10px;
-        border-radius:12px;
-        background:rgba(255,255,255,.08);
-        cursor:pointer;
-        font-weight:800
+      .waf-preview{
+        position:absolute;top:120px;right:0;bottom:0;width:380px;
+        background:rgba(0,0,0,.55);display:flex;flex-direction:column
       }
-
-      body[data-theme="light"]{
-        background:#f4f6fb;
-        color:#111
+      .waf-preview-top{
+        height:42px;display:flex;align-items:center;
+        gap:8px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.08)
       }
-      body[data-theme="light"] .waf-tree,
-      body[data-theme="light"] .waf-editor,
-      body[data-theme="light"] .waf-text{
-        background:#fff;
-        color:#000
+      .waf-canvas{flex:1;display:flex;align-items:center;justify-content:center}
+      .waf-phone{
+        width:320px;height:660px;background:#111;border-radius:40px;
+        padding:14px;box-shadow:0 18px 60px rgba(0,0,0,.45)
       }
+      .waf-phone iframe{width:100%;height:100%;border:none;border-radius:26px}
+      .hidden{display:none!important}
     `;
     document.head.appendChild(style);
   }
@@ -133,28 +144,21 @@
       </div>
     `;
     document.body.appendChild(bar);
+
+    $("#wafAuto").onchange = e => autoSync = e.target.checked;
+    $("#wafRefresh").onclick = () => renderPreview(true);
   }
 
   function buildTree() {
     const t = document.createElement("div");
     t.className = "waf-tree";
-
     files.forEach(f => {
       const n = document.createElement("div");
       n.className = "waf-node";
       n.textContent = f;
+      n.onclick = () => openFile(f);
       t.appendChild(n);
     });
-
-    const footer = document.createElement("div");
-    footer.className = "waf-tree-footer";
-    footer.innerHTML = `<div class="waf-theme-toggle">🌙 / ☀️</div>`;
-    footer.onclick = () => {
-      document.body.dataset.theme =
-        document.body.dataset.theme === "light" ? "" : "light";
-    };
-
-    t.appendChild(footer);
     document.body.appendChild(t);
   }
 
@@ -162,13 +166,21 @@
     const e = document.createElement("div");
     e.className = "waf-editor";
     e.innerHTML = `
-      <div class="waf-editor-head">No file</div>
+      <div class="waf-editor-head" id="wafFileName">No file</div>
       <div class="waf-editor-body">
-        <div class="waf-lines"></div>
-        <textarea class="waf-text"></textarea>
+        <div class="waf-lines" id="wafLines"></div>
+        <textarea class="waf-text" id="wafText" disabled></textarea>
       </div>
     `;
     document.body.appendChild(e);
+
+    const ta = $("#wafText");
+    ta.oninput = () => {
+      if (!activeFile) return;
+      contents[activeFile] = ta.value;
+      renderLines(ta.value);
+      if (autoSync) debouncePreview();
+    };
   }
 
   function buildPreview() {
@@ -176,60 +188,53 @@
     p.className = "waf-preview";
     p.innerHTML = `
       <div class="waf-preview-top">
-        <button class="waf-btn">📱</button>
-        <button class="waf-btn">🖥️</button>
+        <button class="waf-btn" id="wafMobile">📱</button>
+        <button class="waf-btn" id="wafDesktop">🖥️</button>
       </div>
       <div class="waf-canvas">
         <div class="waf-phone" id="wafPhone">
-          <iframe></iframe>
+          <iframe id="wafFrame"></iframe>
         </div>
       </div>
     `;
     document.body.appendChild(p);
+
+    $("#wafMobile").onclick = () => deviceMode = "mobile";
+    $("#wafDesktop").onclick = () => deviceMode = "desktop";
   }
 
   /* =========================================================
-     DRAG PHONE – FIX DEFINITIVO (AGGIUNTA)
+     EDITOR LOGIC
      ========================================================= */
-  function enablePhoneDrag() {
-    const phone = $("#wafPhone");
-    const canvas = phone?.parentElement;
-    if (!phone || !canvas) return;
+  function renderLines(txt) {
+    const l = $("#wafLines");
+    const c = Math.max(1, txt.split("\n").length);
+    l.innerHTML = Array.from({ length: c }, (_, i) => `<div>${i + 1}</div>`).join("");
+  }
 
-    let dragging = false;
-    let sx = 0, sy = 0, sl = 0, st = 0;
+  function openFile(path) {
+    activeFile = path;
+    $("#wafFileName").textContent = path;
+    const ta = $("#wafText");
+    ta.disabled = !isText(path);
+    ta.value = contents[path] || "";
+    renderLines(ta.value);
+    renderPreview(true);
+  }
 
-    phone.style.position = "absolute";
-    phone.style.cursor = "grab";
+  /* =========================================================
+     PREVIEW
+     ========================================================= */
+  function debouncePreview() {
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => renderPreview(), 300);
+  }
 
-    const stopDrag = () => {
-      dragging = false;
-      phone.style.cursor = "grab";
-    };
-
-    phone.addEventListener("mousedown", e => {
-      if (e.target.tagName === "IFRAME") return;
-      dragging = true;
-      phone.style.cursor = "grabbing";
-      const r = phone.getBoundingClientRect();
-      const c = canvas.getBoundingClientRect();
-      sx = e.clientX; sy = e.clientY;
-      sl = r.left - c.left; st = r.top - c.top;
-      e.preventDefault();
-    });
-
-    document.addEventListener("mousemove", e => {
-      if (!dragging) return;
-      phone.style.left = sl + (e.clientX - sx) + "px";
-      phone.style.top  = st + (e.clientY - sy) + "px";
-    });
-
-    document.addEventListener("mouseup", stopDrag);
-    document.addEventListener("mouseleave", stopDrag);
-    window.addEventListener("blur", stopDrag);
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape") stopDrag();
-    });
+  function renderPreview(force = false) {
+    if (!autoSync && !force) return;
+    const html = contents["index.html"];
+    if (!html) return;
+    $("#wafFrame").srcdoc = html;
   }
 
   /* =========================================================
@@ -237,14 +242,14 @@
      ========================================================= */
   document.addEventListener(EVT_PROJECT_REGISTERED, e => {
     project = e.detail;
-    files = project.files || [];
+    files = project.files || ["index.html", "style.css", "app.js"];
     contents = project.contents || {};
     injectStyles();
     buildBar();
     buildTree();
     buildEditor();
     buildPreview();
-    enablePhoneDrag();
+    openFile("index.html");
     log("READY");
   });
 
