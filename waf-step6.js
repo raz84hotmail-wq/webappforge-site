@@ -55,8 +55,6 @@
     const style = document.createElement("style");
     style.id = "wafStep6Styles";
     style.textContent = `
-      /* ===== EXISTING STYLES (INTOCCATI) ===== */
-
       .waf-bar{
         position:absolute;top:72px;left:0;right:0;height:48px;
         background:rgba(10,16,30,.95);
@@ -89,41 +87,29 @@
         font-weight:800
       }
 
-      /* ===== AGGIUNTA: FOOTER FILE TREE ===== */
       .waf-tree-footer{
         margin-top:auto;
         padding:10px 6px 6px;
         border-top:1px solid rgba(255,255,255,.08);
-        display:flex;
-        align-items:center;
-        justify-content:flex-start
+        display:flex
       }
 
       .waf-theme-toggle{
-        display:flex;
-        align-items:center;
-        gap:8px;
         padding:6px 10px;
         border-radius:12px;
         background:rgba(255,255,255,.08);
         cursor:pointer;
-        font-weight:800;
-        user-select:none
+        font-weight:800
       }
 
-      /* ===== LIGHT THEME ===== */
       body[data-theme="light"]{
         background:#f4f6fb;
         color:#111
       }
-      body[data-theme="light"] .waf-tree{
-        background:#ffffff
-      }
-      body[data-theme="light"] .waf-editor{
-        background:#ffffff
-      }
+      body[data-theme="light"] .waf-tree,
+      body[data-theme="light"] .waf-editor,
       body[data-theme="light"] .waf-text{
-        background:#ffffff;
+        background:#fff;
         color:#000
       }
     `;
@@ -147,9 +133,6 @@
       </div>
     `;
     document.body.appendChild(bar);
-
-    $("#wafAuto").onchange = e => autoSync = e.target.checked;
-    $("#wafRefresh").onclick = () => renderPreview(true);
   }
 
   function buildTree() {
@@ -160,25 +143,18 @@
       const n = document.createElement("div");
       n.className = "waf-node";
       n.textContent = f;
-      n.onclick = () => openFile(f);
       t.appendChild(n);
     });
 
-    /* ===== AGGIUNTA: TOGGLE GIORNO / NOTTE ===== */
     const footer = document.createElement("div");
     footer.className = "waf-tree-footer";
-    footer.innerHTML = `
-      <div class="waf-theme-toggle" id="wafThemeToggle">
-        🌙 / ☀️
-      </div>
-    `;
-    t.appendChild(footer);
-
+    footer.innerHTML = `<div class="waf-theme-toggle">🌙 / ☀️</div>`;
     footer.onclick = () => {
       document.body.dataset.theme =
         document.body.dataset.theme === "light" ? "" : "light";
     };
 
+    t.appendChild(footer);
     document.body.appendChild(t);
   }
 
@@ -186,20 +162,13 @@
     const e = document.createElement("div");
     e.className = "waf-editor";
     e.innerHTML = `
-      <div class="waf-editor-head" id="wafFileName">No file</div>
+      <div class="waf-editor-head">No file</div>
       <div class="waf-editor-body">
-        <div class="waf-lines" id="wafLines"></div>
-        <textarea class="waf-text" id="wafText" disabled></textarea>
+        <div class="waf-lines"></div>
+        <textarea class="waf-text"></textarea>
       </div>
     `;
     document.body.appendChild(e);
-
-    const ta = $("#wafText");
-    ta.oninput = () => {
-      if (!activeFile) return;
-      contents[activeFile] = ta.value;
-      if (autoSync) debouncePreview();
-    };
   }
 
   function buildPreview() {
@@ -207,18 +176,21 @@
     p.className = "waf-preview";
     p.innerHTML = `
       <div class="waf-preview-top">
-        <button class="waf-btn" id="wafMobile">📱</button>
-        <button class="waf-btn" id="wafDesktop">🖥️</button>
+        <button class="waf-btn">📱</button>
+        <button class="waf-btn">🖥️</button>
       </div>
       <div class="waf-canvas">
         <div class="waf-phone" id="wafPhone">
-          <iframe id="wafFrame"></iframe>
+          <iframe></iframe>
         </div>
       </div>
     `;
     document.body.appendChild(p);
   }
 
+  /* =========================================================
+     DRAG PHONE – FIX DEFINITIVO (AGGIUNTA)
+     ========================================================= */
   function enablePhoneDrag() {
     const phone = $("#wafPhone");
     const canvas = phone?.parentElement;
@@ -230,11 +202,15 @@
     phone.style.position = "absolute";
     phone.style.cursor = "grab";
 
-    const stopDrag = () => dragging = false;
+    const stopDrag = () => {
+      dragging = false;
+      phone.style.cursor = "grab";
+    };
 
     phone.addEventListener("mousedown", e => {
       if (e.target.tagName === "IFRAME") return;
       dragging = true;
+      phone.style.cursor = "grabbing";
       const r = phone.getBoundingClientRect();
       const c = canvas.getBoundingClientRect();
       sx = e.clientX; sy = e.clientY;
@@ -245,10 +221,15 @@
     document.addEventListener("mousemove", e => {
       if (!dragging) return;
       phone.style.left = sl + (e.clientX - sx) + "px";
-      phone.style.top = st + (e.clientY - sy) + "px";
+      phone.style.top  = st + (e.clientY - sy) + "px";
     });
 
     document.addEventListener("mouseup", stopDrag);
+    document.addEventListener("mouseleave", stopDrag);
+    window.addEventListener("blur", stopDrag);
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") stopDrag();
+    });
   }
 
   /* =========================================================
@@ -256,7 +237,7 @@
      ========================================================= */
   document.addEventListener(EVT_PROJECT_REGISTERED, e => {
     project = e.detail;
-    files = project.files || ["index.html", "style.css", "app.js"];
+    files = project.files || [];
     contents = project.contents || {};
     injectStyles();
     buildBar();
