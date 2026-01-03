@@ -2,33 +2,24 @@
    WebAppForge – STEP 6 (STABILE)
    6.0 Workspace Foundation
    6.1 File Tree + Line Numbers (FIX)
-   6.2 Code Editor
+   6.2 Code Editor + Day/Night Toggle (GOODBARBER STYLE)
    6.3 Live Preview
    ========================================================= */
 
 (function () {
   "use strict";
 
-  /* =========================================================
-     EVENT
-     ========================================================= */
   const EVT_PROJECT_REGISTERED = "waf:project-registered";
 
-  /* =========================================================
-     STATE
-     ========================================================= */
   let project = null;
   let files = [];
   let contents = {};
   let activeFile = null;
 
   let autoSync = true;
-  let deviceMode = "mobile";
   let previewTimer = null;
+  let theme = "dark"; // dark | light
 
-  /* =========================================================
-     HELPERS
-     ========================================================= */
   const $ = (s, r = document) => r.querySelector(s);
 
   const esc = s =>
@@ -40,10 +31,9 @@
       .replaceAll("'", "&#039;");
 
   const isText = p => /\.(html?|css|js|json|txt|md|svg)$/i.test(p || "");
-  const log = (...a) => console.log("[WAF STEP 6]", ...a);
 
   /* =========================================================
-     STYLES (GRAFICA INVARIATA – FIX TECNICI)
+     STYLES
      ========================================================= */
   function injectStyles() {
     if ($("#wafStep6Styles")) return;
@@ -51,6 +41,26 @@
     const style = document.createElement("style");
     style.id = "wafStep6Styles";
     style.textContent = `
+      :root{
+        --bg-dark:#0B1220;
+        --bg-light:#ffffff;
+        --text-dark:#ffffff;
+        --text-light:#0B1220;
+        --line-dark:rgba(255,255,255,.45);
+        --line-light:#999;
+      }
+
+      body.waf-light{
+        --editor-bg:var(--bg-light);
+        --editor-text:var(--text-light);
+        --lines:var(--line-light);
+      }
+      body.waf-dark{
+        --editor-bg:var(--bg-dark);
+        --editor-text:var(--text-dark);
+        --lines:var(--line-dark);
+      }
+
       .waf-bar{
         position:absolute;top:72px;left:0;right:0;height:48px;
         background:rgba(10,16,30,.95);
@@ -62,7 +72,7 @@
         padding:4px 8px;border-radius:8px;
         background:rgba(255,255,255,.08);font-weight:800
       }
-      .waf-right{margin-left:auto;display:flex;gap:8px}
+      .waf-right{margin-left:auto;display:flex;gap:10px;align-items:center}
       .waf-btn{
         padding:8px 10px;border-radius:10px;
         background:rgba(255,255,255,.08);
@@ -70,21 +80,33 @@
         color:#fff;font-weight:800;cursor:pointer
       }
 
+      /* GOODBARBER TOGGLE */
+      .waf-toggle{
+        width:44px;height:22px;border-radius:22px;
+        background:#555;position:relative;cursor:pointer
+      }
+      .waf-toggle::after{
+        content:"";width:18px;height:18px;
+        background:#fff;border-radius:50%;
+        position:absolute;top:2px;left:2px;
+        transition:.25s
+      }
+      body.waf-light .waf-toggle{background:#1F7CFF}
+      body.waf-light .waf-toggle::after{left:24px}
+
       .waf-tree{
         position:absolute;top:120px;left:0;bottom:0;width:280px;
         background:rgba(11,18,32,.95);
         border-right:1px solid rgba(255,255,255,.08);
         padding:10px;overflow:auto;z-index:5
       }
-      .waf-node{
-        padding:6px 8px;border-radius:10px;
-        cursor:pointer;opacity:.9
-      }
+      .waf-node{padding:6px 8px;border-radius:10px;cursor:pointer}
       .waf-node:hover{background:rgba(255,255,255,.06)}
 
       .waf-editor{
         position:absolute;top:120px;left:280px;right:380px;bottom:0;
-        background:#0B1220;display:flex;flex-direction:column;
+        display:flex;flex-direction:column;
+        background:var(--editor-bg);
         border-right:1px solid rgba(255,255,255,.08)
       }
       .waf-editor-head{
@@ -93,36 +115,30 @@
       }
       .waf-editor-body{flex:1;display:flex;overflow:hidden}
 
-      /* ===== LINE NUMBERS FIX ===== */
       .waf-lines{
         width:64px;
-        background:rgba(255,255,255,.03);
-        border-right:1px solid rgba(255,255,255,.08);
-        color:rgba(255,255,255,.45);
-        font-family:monospace;
-        font-size:12px;
-        text-align:right;
-        overflow:hidden;
-        padding-top:16px;
+        background:rgba(0,0,0,.04);
+        border-right:1px solid rgba(0,0,0,.08);
+        color:var(--lines);
+        font-family:monospace;font-size:12px;
+        text-align:right;padding-top:16px
       }
-      .waf-lines div{
-        padding:0 12px;
-        height:18px;
-        line-height:18px;
-      }
+      .waf-lines div{height:18px;line-height:18px;padding:0 12px}
 
       .waf-text{
-        flex:1;
-        background:#0B1220;
-        color:#fff;
-        border:none;
-        resize:none;
-        padding:16px;
-        font-family:monospace;
-        font-size:13px;
-        line-height:18px;
-        outline:none;
-        overflow:auto;
+        flex:1;border:none;resize:none;
+        padding:16px;font-family:monospace;
+        font-size:13px;line-height:18px;
+        background:var(--editor-bg);
+        color:var(--editor-text);
+        outline:none
+      }
+
+      body.waf-dark .waf-text{
+        color:#EAEAEA;
+      }
+      body.waf-dark .waf-text::selection{
+        background:#6A1B9A;color:#fff
       }
 
       .waf-preview{
@@ -133,49 +149,40 @@
         height:42px;display:flex;align-items:center;
         gap:8px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.08)
       }
-      .waf-canvas{
-        flex:1;display:flex;
-        align-items:center;justify-content:center
-      }
+      .waf-canvas{flex:1;display:flex;align-items:center;justify-content:center}
       .waf-phone{
-        width:320px;height:660px;background:#111;
-        border-radius:40px;padding:14px;
-        box-shadow:0 18px 60px rgba(0,0,0,.45)
+        width:320px;height:660px;background:#111;border-radius:40px;
+        padding:14px
       }
-      .waf-phone iframe{
-        width:100%;height:100%;
-        border:none;border-radius:26px
-      }
+      .waf-phone iframe{width:100%;height:100%;border:none;border-radius:26px}
     `;
     document.head.appendChild(style);
   }
 
   /* =========================================================
-     UI BUILD
+     UI
      ========================================================= */
   function buildBar() {
     const bar = document.createElement("div");
     bar.className = "waf-bar";
     bar.innerHTML = `
       <div class="waf-tag">${esc(project.name)}</div>
-      <div class="waf-tag">${esc(project.type || "")}</div>
       <div class="waf-right">
-        <label class="waf-tag">
-          <input id="wafAuto" type="checkbox" checked> Auto
-        </label>
+        <span>🌙</span>
+        <div class="waf-toggle" id="wafTheme"></div>
+        <span>☀️</span>
         <button class="waf-btn" id="wafRefresh">Refresh</button>
       </div>
     `;
     document.body.appendChild(bar);
 
-    $("#wafAuto").onchange = e => autoSync = e.target.checked;
+    $("#wafTheme").onclick = toggleTheme;
     $("#wafRefresh").onclick = () => renderPreview(true);
   }
 
   function buildTree() {
     const t = document.createElement("div");
     t.className = "waf-tree";
-
     files.forEach(f => {
       const n = document.createElement("div");
       n.className = "waf-node";
@@ -183,7 +190,6 @@
       n.onclick = () => openFile(f);
       t.appendChild(n);
     });
-
     document.body.appendChild(t);
   }
 
@@ -202,15 +208,12 @@
     const ta = $("#wafText");
     const lines = $("#wafLines");
 
-    ta.addEventListener("scroll", () => {
-      lines.scrollTop = ta.scrollTop;
-    });
+    ta.addEventListener("scroll", () => lines.scrollTop = ta.scrollTop);
 
     ta.oninput = () => {
-      if (!activeFile) return;
       contents[activeFile] = ta.value;
       renderLines(ta.value);
-      if (autoSync) debouncePreview();
+      debouncePreview();
     };
   }
 
@@ -218,10 +221,7 @@
     const p = document.createElement("div");
     p.className = "waf-preview";
     p.innerHTML = `
-      <div class="waf-preview-top">
-        <button class="waf-btn">📱</button>
-        <button class="waf-btn">🖥️</button>
-      </div>
+      <div class="waf-preview-top"></div>
       <div class="waf-canvas">
         <div class="waf-phone">
           <iframe id="wafFrame"></iframe>
@@ -232,11 +232,11 @@
   }
 
   /* =========================================================
-     EDITOR LOGIC
+     LOGIC
      ========================================================= */
   function renderLines(txt) {
     const l = $("#wafLines");
-    const c = Math.max(1, txt.split("\n").length + 1);
+    const c = Math.max(1, txt.split("\n").length);
     l.innerHTML = Array.from({ length: c }, (_, i) => `<div>${i + 1}</div>`).join("");
   }
 
@@ -250,19 +250,20 @@
     renderPreview(true);
   }
 
-  /* =========================================================
-     PREVIEW
-     ========================================================= */
   function debouncePreview() {
     clearTimeout(previewTimer);
-    previewTimer = setTimeout(() => renderPreview(), 300);
+    previewTimer = setTimeout(renderPreview, 300);
   }
 
   function renderPreview(force = false) {
-    if (!autoSync && !force) return;
     const html = contents["index.html"];
-    if (!html) return;
-    $("#wafFrame").srcdoc = html;
+    if (html) $("#wafFrame").srcdoc = html;
+  }
+
+  function toggleTheme() {
+    theme = theme === "dark" ? "light" : "dark";
+    document.body.classList.toggle("waf-light", theme === "light");
+    document.body.classList.toggle("waf-dark", theme === "dark");
   }
 
   /* =========================================================
@@ -272,13 +273,13 @@
     project = e.detail;
     files = project.files || ["index.html", "style.css", "app.js"];
     contents = project.contents || {};
+    document.body.classList.add("waf-dark");
     injectStyles();
     buildBar();
     buildTree();
     buildEditor();
     buildPreview();
     openFile("index.html");
-    log("READY");
   });
 
 })();
