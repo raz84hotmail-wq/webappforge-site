@@ -197,82 +197,52 @@
       </div>
     `;
     document.body.appendChild(p);
-
-    $("#wafMobile").onclick = () => deviceMode = "mobile";
-    $("#wafDesktop").onclick = () => deviceMode = "desktop";
   }
 
   /* =========================================================
-     EDITOR LOGIC
-     ========================================================= */
-  function renderLines(txt) {
-    const l = $("#wafLines");
-    const c = Math.max(1, txt.split("\n").length);
-    l.innerHTML = Array.from({ length: c }, (_, i) => `<div>${i + 1}</div>`).join("");
-  }
-
-  function openFile(path) {
-    activeFile = path;
-    $("#wafFileName").textContent = path;
-    const ta = $("#wafText");
-    ta.disabled = !isText(path);
-    ta.value = contents[path] || "";
-    renderLines(ta.value);
-    renderPreview(true);
-  }
-
-  /* =========================================================
-     PREVIEW
-     ========================================================= */
-  function debouncePreview() {
-    clearTimeout(previewTimer);
-    previewTimer = setTimeout(renderPreview, 300);
-  }
-
-  function renderPreview(force = false) {
-    if (!autoSync && !force) return;
-    const html = contents["index.html"];
-    if (!html) return;
-    $("#wafFrame").srcdoc = html;
-  }
-
-  /* =========================================================
-     DRAG PHONE (UNICA AGGIUNTA)
+     DRAG PHONE (FIX DEFINITIVO)
      ========================================================= */
   function enablePhoneDrag() {
     const phone = $("#wafPhone");
     const canvas = phone?.parentElement;
     if (!phone || !canvas) return;
 
-    let drag = false, sx = 0, sy = 0, sl = 0, st = 0;
+    let dragging = false;
+    let sx = 0, sy = 0, sl = 0, st = 0;
 
     phone.style.position = "absolute";
     phone.style.cursor = "grab";
 
     phone.addEventListener("mousedown", e => {
       if (e.target.tagName === "IFRAME") return;
-      drag = true;
+      dragging = true;
       phone.style.cursor = "grabbing";
+
       const r = phone.getBoundingClientRect();
       const c = canvas.getBoundingClientRect();
-      sx = e.clientX; sy = e.clientY;
+      sx = e.clientX;
+      sy = e.clientY;
       sl = r.left - c.left;
       st = r.top - c.top;
+
       e.preventDefault();
     });
 
     document.addEventListener("mousemove", e => {
-      if (!drag) return;
-      let x = sl + (e.clientX - sx);
-      let y = st + (e.clientY - sy);
-      phone.style.left = x + "px";
-      phone.style.top = y + "px";
+      if (!dragging) return;
+      phone.style.left = sl + (e.clientX - sx) + "px";
+      phone.style.top  = st + (e.clientY - sy) + "px";
     });
 
-    document.addEventListener("mouseup", () => {
-      drag = false;
+    const stop = () => {
+      if (!dragging) return;
+      dragging = false;
       phone.style.cursor = "grab";
-    });
+    };
+
+    document.addEventListener("mouseup", stop);
+    document.addEventListener("mouseleave", stop);
+    window.addEventListener("blur", stop);
   }
 
   /* =========================================================
