@@ -200,7 +200,7 @@
   }
 
   /* =========================================================
-     DRAG PHONE (FIX DEFINITIVO)
+     DRAG PHONE – FIX DEFINITIVO (SOLO QUESTO)
      ========================================================= */
   function enablePhoneDrag() {
     const phone = $("#wafPhone");
@@ -213,13 +213,21 @@
     phone.style.position = "absolute";
     phone.style.cursor = "grab";
 
+    const stopDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      phone.style.cursor = "grab";
+    };
+
     phone.addEventListener("mousedown", e => {
       if (e.target.tagName === "IFRAME") return;
+
       dragging = true;
       phone.style.cursor = "grabbing";
 
       const r = phone.getBoundingClientRect();
       const c = canvas.getBoundingClientRect();
+
       sx = e.clientX;
       sy = e.clientY;
       sl = r.left - c.left;
@@ -234,15 +242,12 @@
       phone.style.top  = st + (e.clientY - sy) + "px";
     });
 
-    const stop = () => {
-      if (!dragging) return;
-      dragging = false;
-      phone.style.cursor = "grab";
-    };
-
-    document.addEventListener("mouseup", stop);
-    document.addEventListener("mouseleave", stop);
-    window.addEventListener("blur", stop);
+    document.addEventListener("mouseup", stopDrag);
+    document.addEventListener("mouseleave", stopDrag);
+    window.addEventListener("blur", stopDrag);
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") stopDrag();
+    });
   }
 
   /* =========================================================
